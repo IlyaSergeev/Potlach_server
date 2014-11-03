@@ -2,19 +2,17 @@ package com.ilya.sergeev.potlach.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.jmx.access.InvocationFailureException;
 
 import retrofit.RestAdapter.LogLevel;
 import retrofit.client.ApacheClient;
 
 import com.ilya.sergeev.potlach.client.SecuredRestBuilder;
 import com.ilya.sergeev.potlach.client.UserInfoSvcApi;
-import com.ilya.sergeev.potlach.model.MockInst;
+import com.ilya.sergeev.potlach.model.SimpleMessage;
 
 public class AuthTests
 {
@@ -44,8 +42,9 @@ public class AuthTests
 	@Test
 	public void testGetHello() throws Exception
 	{
-		MockInst inst = userInfoSvcAdminGood.getHello();
-		assertEquals("Hello, this is test!", inst.getMessage());
+		SimpleMessage msg = userInfoSvcAdminGood.getHello();
+		assertEquals(USERNAME_ADMIN, msg.getUserName());
+		assertEquals("Hello world", msg.getMessage());
 	}
 	
 	@Test
