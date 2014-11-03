@@ -1,7 +1,5 @@
 package com.ilya.sergeev.potlach.auth;
 
-import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +20,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
  * Configure this web application to use OAuth 2.0.
@@ -138,20 +135,11 @@ public class OAuth2SecurityConfiguration
 					// video service
 					.withClient("mobile").authorizedGrantTypes("password")
 					.authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
-					.scopes("read", "write", "vote").resourceIds("gifts")
+					.scopes("read", "write").resourceIds("gifts")
 					.and()
 					.build();
 			
-			// Create a series of hard-coded users.
-			UserDetailsService svc = new InMemoryUserDetailsManager(
-					Arrays.asList(
-							User.create("admin", "pass", "ADMIN", "USER"),
-							User.create("user0", "pass", "USER"),
-							User.create("user1", "pass", "USER"),
-							User.create("user2", "pass", "USER"),
-							User.create("user3", "pass", "USER"),
-							User.create("user4", "pass", "USER"),
-							User.create("user5", "pass", "USER")));
+			UserDetailsService svc = new CustomUserDetailsService();
 			
 			// Since clients have to use BASIC authentication with the client's id/secret,
 			// when sending a request for a password grant, we make each client a user

@@ -12,12 +12,12 @@ import com.ilya.sergeev.potlach.model.MockInst;
 public class UserController
 {
 	// GET /user_info/name
-	@RequestMapping(value = UserInfoSvcApi.USER_NAME_PATH, method = RequestMethod.GET)
+	@RequestMapping(value = UserInfoSvcApi.HELLO_PATH, method = RequestMethod.GET)
 	
-	public @ResponseBody MockInst getUserName()
+	public @ResponseBody MockInst getHello()
 	{
 		MockInst result = new MockInst();
-		result.setMessage("test test");
+		result.setMessage("Hello, this is test!");
 		return result;
 	}
 }
