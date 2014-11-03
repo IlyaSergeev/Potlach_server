@@ -1,5 +1,7 @@
 package com.ilya.sergeev.potlach.client;
 
+import com.ilya.sergeev.potlach.model.MockInst;
+
 import retrofit.http.GET;
 
 public interface UserInfoSvcApi
@@ -11,5 +13,5 @@ public interface UserInfoSvcApi
 	public static final String USER_NAME_PATH = USER_INFO_PATH + "/name";
 	
 	@GET(USER_NAME_PATH)
-	public String getUserName();
+	public MockInst getUserName();
 }
