@@ -20,6 +20,10 @@ public class CustomUserDetailsService implements UserDetailsService
 		{
 			return User.create("admin", "12345", "ADMIN", "USER");
 		}
+		else if ("user".equals(username))
+		{
+			return User.create("user", "11111", "USER");
+		}
 		else
 		{
 			UserInfo userInfo = mUserInfoRepository.findByName(username);
