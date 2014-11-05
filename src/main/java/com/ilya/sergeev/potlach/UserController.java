@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ilya.sergeev.potlach.client.UserInfoSvcApi;
-import com.ilya.sergeev.potlach.model.SimpleMessage;
 import com.ilya.sergeev.potlach.repository.UserInfo;
 import com.ilya.sergeev.potlach.repository.UserInfoRepository;
 

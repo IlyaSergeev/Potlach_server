@@ -9,9 +9,9 @@ import org.junit.Test;
 
 import retrofit.client.ApacheClient;
 
+import com.ilya.sergeev.potlach.SimpleMessage;
 import com.ilya.sergeev.potlach.client.SecuredRestBuilder;
 import com.ilya.sergeev.potlach.client.UserInfoSvcApi;
-import com.ilya.sergeev.potlach.model.SimpleMessage;
 import com.ilya.sergeev.potlach.repository.UserInfo;
 
 public class UsersTests

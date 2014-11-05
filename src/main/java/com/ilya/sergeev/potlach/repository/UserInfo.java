@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.google.common.base.Objects;
+
 @Entity
 public class UserInfo
 {
@@ -45,5 +47,17 @@ public class UserInfo
 	public void setPassword(String password)
 	{
 		this.password = password;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return Objects.hashCode(getName());
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		return (obj instanceof UserInfo) && Objects.equal(getName(), ((UserInfo)obj).getName());
 	}
 }

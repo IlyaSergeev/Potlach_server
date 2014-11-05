@@ -1,6 +1,6 @@
 package com.ilya.sergeev.potlach.client;
 
-import com.ilya.sergeev.potlach.model.SimpleMessage;
+import com.ilya.sergeev.potlach.SimpleMessage;
 import com.ilya.sergeev.potlach.repository.UserInfo;
 
 import retrofit.client.Response;
