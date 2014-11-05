@@ -79,6 +79,7 @@ public class GiftController
 	}
 
 	@Multipart
+	@PreAuthorize("hasRole('USER'")
 	@RequestMapping(value=GiftSvcApi.GIFT_DATA_PATH, method=RequestMethod.POST)
 	public ImageStatus setImageData(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, @RequestParam(GiftSvcApi.DATA_PARAMETER) MultipartFile giftData)
 	{
@@ -99,6 +100,7 @@ public class GiftController
 	}
 	
 	@Streaming
+	@PreAuthorize("hasRole('USER'")
 	@RequestMapping(value=GiftSvcApi.GIFT_DATA_PATH, method = RequestMethod.GET)
 	public void getData(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, HttpServletResponse response)
 	{
