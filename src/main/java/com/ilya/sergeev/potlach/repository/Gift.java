@@ -1,6 +1,7 @@
 package com.ilya.sergeev.potlach.repository;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,12 +24,13 @@ public class Gift implements Serializable
 	private long id;
 	
 	@NotNull
-	private long userId;
+	private String userName;
 	
 	@NotNull
 	private String title;
 	private String message;
 	private String url;
+	private Date createDate = new Date();
 	
 	public long getId()
 	{
@@ -73,26 +75,36 @@ public class Gift implements Serializable
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(getUserId(), getTitle(), getMessage(), getUrl());
+		return Objects.hashCode(getUserName(), getTitle(), getMessage(), getUrl());
 	}
 	
 	@Override
 	public boolean equals(Object obj)
 	{
 		return (obj instanceof Gift)
-				&& Objects.equal(getUserId(), ((Gift)obj).getUserId())
+				&& Objects.equal(getUserName(), ((Gift)obj).getUserName())
 				&& Objects.equal(getTitle(), ((Gift)obj).getTitle())
 				&& Objects.equal(getMessage(), ((Gift)obj).getMessage())
 				&& Objects.equal(getUrl(), ((Gift)obj).getUrl());
 	}
 
-	public long getUserId()
+	public Date getCreateDate()
 	{
-		return userId;
+		return createDate;
 	}
 
-	public void setUserId(long userId)
+	public void setCreateDate(Date createDate)
 	{
-		this.userId = userId;
+		this.createDate = createDate;
+	}
+
+	public String getUserName()
+	{
+		return userName;
+	}
+
+	public void setUserName(String userName)
+	{
+		this.userName = userName;
 	}
 }
