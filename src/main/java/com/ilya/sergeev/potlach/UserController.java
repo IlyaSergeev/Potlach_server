@@ -6,14 +6,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import retrofit.http.Part;
 
 import com.ilya.sergeev.potlach.client.UserInfoSvcApi;
 import com.ilya.sergeev.potlach.model.SimpleMessage;
@@ -44,7 +41,7 @@ public class UserController
 		return mUserRepository.findByName(userName);
 	}
 	
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or isAnonymous()")
 	@RequestMapping(value = UserInfoSvcApi.REGISTER_USER_PATH, method = RequestMethod.POST)
 	public @ResponseBody
 	UserInfo createUser(@RequestParam(UserInfoSvcApi.USER_NAME_PARAM) String userName, @RequestParam(UserInfoSvcApi.PASSWORD_PARAM) String password)
@@ -55,9 +52,9 @@ public class UserController
 		return mUserRepository.save(newUser);
 	}
 	
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or #userName = principal.name")
 	@RequestMapping(value = UserInfoSvcApi.DELETE_USER_PATH, method = RequestMethod.POST)
-	public void deleteUser(@RequestParam(UserInfoSvcApi.USER_NAME_PARAM) String userName, HttpServletResponse response)
+	public void deleteUser(@RequestParam(UserInfoSvcApi.USER_NAME_PARAM) String userName, HttpServletResponse response, Principal user)
 	{
 		UserInfo userInfo = mUserRepository.findByName(userName);
 		if (userInfo != null && userInfo.getId() > 0)
