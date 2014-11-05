@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface GiftRepository extends CrudRepository<Gift, Long>
 {
 	public Collection<Gift> findByTitleContainingIgnoreCase(String title);
-	public Collection<Gift> findByOwner(UserInfo owner);
+	public Collection<Gift> findByUserId(long userId);
 }

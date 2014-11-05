@@ -1,18 +1,31 @@
 package com.ilya.sergeev.potlach.repository;
 
+import java.io.Serializable;
+
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.google.common.base.Objects;
+import com.sun.istack.internal.NotNull;
 
-public class Gift
+@Entity
+public class Gift implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 	
-	private UserInfo owner;
+	@NotNull
+	private long userId;
+	
+	@NotNull
 	private String title;
 	private String message;
 	private String url;
@@ -25,16 +38,6 @@ public class Gift
 	public void setId(long id)
 	{
 		this.id = id;
-	}
-
-	public UserInfo getOwner()
-	{
-		return owner;
-	}
-
-	public void setOwner(UserInfo owner)
-	{
-		this.owner = owner;
 	}
 
 	public String getTitle()
@@ -70,16 +73,26 @@ public class Gift
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(getOwner(), getTitle(), getMessage(), getUrl());
+		return Objects.hashCode(getUserId(), getTitle(), getMessage(), getUrl());
 	}
 	
 	@Override
 	public boolean equals(Object obj)
 	{
 		return (obj instanceof Gift)
-				&& Objects.equal(getOwner(), ((Gift)obj).getOwner())
+				&& Objects.equal(getUserId(), ((Gift)obj).getUserId())
 				&& Objects.equal(getTitle(), ((Gift)obj).getTitle())
 				&& Objects.equal(getMessage(), ((Gift)obj).getMessage())
 				&& Objects.equal(getUrl(), ((Gift)obj).getUrl());
+	}
+
+	public long getUserId()
+	{
+		return userId;
+	}
+
+	public void setUserId(long userId)
+	{
+		this.userId = userId;
 	}
 }
