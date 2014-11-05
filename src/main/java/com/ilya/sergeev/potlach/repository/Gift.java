@@ -1,6 +1,5 @@
 package com.ilya.sergeev.potlach.repository;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -12,13 +11,8 @@ import com.google.common.base.Objects;
 import com.sun.istack.internal.NotNull;
 
 @Entity
-public class Gift implements Serializable
+public class Gift 
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
@@ -30,6 +24,8 @@ public class Gift implements Serializable
 	private String title;
 	private String message;
 	private String url;
+	
+	@NotNull
 	private Date createDate = new Date();
 	
 	public long getId()

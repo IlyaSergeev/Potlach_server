@@ -1,7 +1,5 @@
 package com.ilya.sergeev.potlach.repository;
 
-import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,19 +9,14 @@ import com.google.common.base.Objects;
 import com.sun.istack.internal.NotNull;
 
 @Entity
-public class Vote implements Serializable
+public class Vote
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
 	@NotNull
-	private long userId;
+	private String userName;
 	
 	@NotNull
 	private long giftId;
@@ -50,14 +43,14 @@ public class Vote implements Serializable
 		this.vote = vote;
 	}
 	
-	public long getUserId()
+	public String getUserName()
 	{
-		return userId;
+		return userName;
 	}
 	
-	public void setUserId(long userId)
+	public void setUserName(String userName)
 	{
-		this.userId = userId;
+		this.userName = userName;
 	}
 	
 	public long getGiftId()
@@ -73,7 +66,7 @@ public class Vote implements Serializable
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(getUserId(), getGiftId(), getVote());
+		return Objects.hashCode(getUserName(), getGiftId(), getVote());
 	}
 	
 	@Override
@@ -81,7 +74,7 @@ public class Vote implements Serializable
 	{
 		return (obj instanceof Vote)
 				&& getGiftId() == ((Vote) obj).getGiftId()
-				&& getUserId() == ((Vote) obj).getUserId()
+				&& getUserName() == ((Vote) obj).getUserName()
 				&& getVote() == ((Vote) obj).getVote();
 	}
 }

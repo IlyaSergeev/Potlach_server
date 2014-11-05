@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VoteRepository extends CrudRepository<Vote, Long>
 {
-	public Collection<Vote> findByUserId(long userId);
+	public Collection<Vote> findByUserName(String userName);
 	public Collection<Vote> findByGiftId(long giftId);
-	public Vote findByUserIdAndGiftId(long userId, long giftId);
+	public Vote findByUserUserNameAndGiftId(String userName, long giftId);
 }

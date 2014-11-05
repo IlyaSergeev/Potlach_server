@@ -2,10 +2,10 @@ package com.ilya.sergeev.potlach.repository;
 
 public class VoteInfo
 {
-	private int votesUp;
-	private int votesDown;
+	private int votesUp = 0;
+	private int votesDown = 0;
 	
-	private Vote userVote;
+	private Vote userVote = null;
 
 	public int getVotesUp()
 	{
