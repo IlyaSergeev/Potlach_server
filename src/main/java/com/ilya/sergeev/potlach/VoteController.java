@@ -26,7 +26,7 @@ public class VoteController
 	VoteInfo getVote(@PathVariable(VoteSvcApi.ID_PARAM) long giftId, Principal principal)
 	{
 		VoteInfo voteInfo = new VoteInfo();
-		voteInfo.setUserVote(mVoteRepository.findByUserUserNameAndGiftId(principal.getName(), giftId));
+		voteInfo.setUserVote(mVoteRepository.findByUserNameAndGiftId(principal.getName(), giftId));
 		Collection<Vote> allVotes = mVoteRepository.findByGiftId(giftId);
 		if (allVotes == null)
 		{
@@ -56,7 +56,7 @@ public class VoteController
 	public @ResponseBody
 	Vote sendVoteUp(@PathVariable(VoteSvcApi.ID_PARAM) long giftId, Principal principal)
 	{
-		return vote(giftId, principal.getName());
+		return vote(giftId, principal.getName(), 1);
 	}
 	
 	@PreAuthorize("hasRole('USER'")
@@ -64,19 +64,19 @@ public class VoteController
 	public @ResponseBody
 	Vote sendVoteDown(@PathVariable(VoteSvcApi.ID_PARAM) long giftId, Principal principal)
 	{
-		return vote(giftId, principal.getName());
+		return vote(giftId, principal.getName(), -1);
 	}
 	
-	private Vote vote(long giftId, String userName)
+	private Vote vote(long giftId, String userName, int voteValue)
 	{
-		Vote vote = mVoteRepository.findByUserUserNameAndGiftId(userName, giftId);
+		Vote vote = mVoteRepository.findByUserNameAndGiftId(userName, giftId);
 		if (vote == null)
 		{
 			vote = new Vote();
 			vote.setGiftId(giftId);
 			vote.setUserName(userName);
 		}
-		vote.setVote(1);
+		vote.setVote(voteValue);
 		return mVoteRepository.save(vote);
 	}
 }

@@ -51,7 +51,7 @@ public class UserController
 		return mUserRepository.save(newUser);
 	}
 	
-	@PreAuthorize("hasRole('ADMIN'")
+	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = UserInfoSvcApi.DELETE_USER_PATH, method = RequestMethod.POST)
 	public void deleteUser(@RequestParam(UserInfoSvcApi.USER_NAME_PARAM) String userName, HttpServletResponse response)
 	{

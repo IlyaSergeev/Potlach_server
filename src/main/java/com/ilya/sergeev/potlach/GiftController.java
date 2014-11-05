@@ -39,23 +39,23 @@ public class GiftController
 	@Autowired
 	GiftRepository mGiftRepository;
 	
-	@PreAuthorize("hasRole('USER'")
+	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.NEW_GIFT_PATH, method = RequestMethod.GET)
 	public @ResponseBody
 	Collection<Gift> getNewGifts()
 	{
-		return Lists.newArrayList(mGiftRepository.findAllOrderByDateAsc());
+		return Lists.newArrayList(mGiftRepository.findAll());
 	}
 	
-	@PreAuthorize("hasRole('USER'")
+	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.MY_GIFT_PATH, method = RequestMethod.GET)
 	public @ResponseBody
 	Collection<Gift> getMyGifts(Principal principal)
 	{
-		return Lists.newArrayList(mGiftRepository.findByUserNameOrderByDateAsc(principal.getName()));
+		return Lists.newArrayList(mGiftRepository.findByUserName(principal.getName()));
 	}
 	
-	@PreAuthorize("hasRole('USER'")
+	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.CREATE_GIFT_PATH, method = RequestMethod.POST)
 	public @ResponseBody
 	Gift createGift(@Query(GiftSvcApi.TITLE_PARAM) String title, @Query(GiftSvcApi.MESSAGE_PARAM) String message, Principal principal)
@@ -79,7 +79,7 @@ public class GiftController
 	}
 
 	@Multipart
-	@PreAuthorize("hasRole('USER'")
+	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value=GiftSvcApi.GIFT_DATA_PATH, method=RequestMethod.POST)
 	public ImageStatus setImageData(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, @RequestParam(GiftSvcApi.DATA_PARAMETER) MultipartFile giftData)
 	{
@@ -100,7 +100,7 @@ public class GiftController
 	}
 	
 	@Streaming
-	@PreAuthorize("hasRole('USER'")
+	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value=GiftSvcApi.GIFT_DATA_PATH, method = RequestMethod.GET)
 	public void getData(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, HttpServletResponse response)
 	{

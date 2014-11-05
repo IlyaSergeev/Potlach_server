@@ -1,7 +1,5 @@
 package com.ilya.sergeev.potlach.repository;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,7 +24,7 @@ public class Gift
 	private String url;
 	
 	@NotNull
-	private Date createDate = new Date();
+	private long date = System.currentTimeMillis();
 	
 	public long getId()
 	{
@@ -84,14 +82,14 @@ public class Gift
 				&& Objects.equal(getUrl(), ((Gift)obj).getUrl());
 	}
 
-	public Date getCreateDate()
+	public long getDate()
 	{
-		return createDate;
+		return date;
 	}
 
-	public void setCreateDate(Date createDate)
+	public void setDate(long date)
 	{
-		this.createDate = createDate;
+		this.date = date;
 	}
 
 	public String getUserName()

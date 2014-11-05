@@ -10,5 +10,5 @@ public interface VoteRepository extends CrudRepository<Vote, Long>
 {
 	public Collection<Vote> findByUserName(String userName);
 	public Collection<Vote> findByGiftId(long giftId);
-	public Vote findByUserUserNameAndGiftId(String userName, long giftId);
+	public Vote findByUserNameAndGiftId(String userName, long giftId);
 }

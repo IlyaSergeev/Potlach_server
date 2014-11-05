@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GiftRepository extends CrudRepository<Gift, Long>
 {
-	public Collection<Gift> findAllOrderByDateAsc();
-	public Collection<Gift> findByTitleContainingIgnoreCaseOrderByDateAsc(String title);
-	public Collection<Gift> findByUserNameOrderByDateAsc(String userName);
+	public Collection<Gift> findByTitleContainingIgnoreCase(String title);
+	public Collection<Gift> findByUserName(String userName);
 }
