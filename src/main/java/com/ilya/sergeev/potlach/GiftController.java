@@ -11,6 +11,7 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import retrofit.http.Multipart;
-import retrofit.http.Query;
 import retrofit.http.Streaming;
 
 import com.google.common.collect.Lists;
@@ -56,13 +56,22 @@ public class GiftController
 	}
 	
 	@PreAuthorize("hasRole('USER')")
+	@RequestMapping(value = GiftSvcApi.SINGLE_GIFT_PATH, method = RequestMethod.GET)
+	public @ResponseBody
+	Gift getGift(@PathVariable(GiftSvcApi.ID_PARAM) long giftId)
+	{
+		return mGiftRepository.findOne(giftId);
+	}
+	
+	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.CREATE_GIFT_PATH, method = RequestMethod.POST)
 	public @ResponseBody
-	Gift createGift(@Query(GiftSvcApi.TITLE_PARAM) String title, @Query(GiftSvcApi.MESSAGE_PARAM) String message, Principal principal)
+	Gift createGift(@RequestBody Gift gift, Principal principal)
 	{
-		Gift gift = new Gift();
-		gift.setTitle(title);
-		gift.setMessage(message);
+		if (gift.getId() > 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		gift.setUserName(principal.getName());
 		gift = mGiftRepository.save(gift);
 		if (gift.getId() > 0)
@@ -77,10 +86,10 @@ public class GiftController
 	{
 		return String.format("%s/%d/data", GiftSvcApi.GIFT_PATH, giftId);
 	}
-
+	
 	@Multipart
 	@PreAuthorize("hasRole('USER')")
-	@RequestMapping(value=GiftSvcApi.GIFT_DATA_PATH, method=RequestMethod.POST)
+	@RequestMapping(value = GiftSvcApi.GIFT_DATA_PATH, method = RequestMethod.POST)
 	public ImageStatus setImageData(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, @RequestParam(GiftSvcApi.DATA_PARAMETER) MultipartFile giftData)
 	{
 		Gift gift = mGiftRepository.findOne(giftId);
@@ -101,7 +110,7 @@ public class GiftController
 	
 	@Streaming
 	@PreAuthorize("hasRole('USER')")
-	@RequestMapping(value=GiftSvcApi.GIFT_DATA_PATH, method = RequestMethod.GET)
+	@RequestMapping(value = GiftSvcApi.GIFT_DATA_PATH, method = RequestMethod.GET)
 	public void getData(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, HttpServletResponse response)
 	{
 		Gift gift = mGiftRepository.findOne(giftId);

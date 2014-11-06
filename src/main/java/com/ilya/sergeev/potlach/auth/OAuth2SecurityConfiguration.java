@@ -22,6 +22,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 
+import com.ilya.sergeev.potlach.repository.UserInfoRepository;
+
 /**
  * Configure this web application to use OAuth 2.0.
  * 
@@ -37,7 +39,7 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
  * 
  */
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class OAuth2SecurityConfiguration
 {
 	
@@ -111,6 +113,9 @@ public class OAuth2SecurityConfiguration
 		@Autowired
 		private AuthenticationManager authenticationManager;
 		
+		@Autowired
+		UserInfoRepository mUserRepository;
+		
 		// A data structure used to store both a ClientDetailsService and a UserDetailsService
 		private ClientAndUserDetailsService mCombinedService;
 		
@@ -129,26 +134,35 @@ public class OAuth2SecurityConfiguration
 			// application, this is one of the key sections that you
 			// would want to change
 			
-			//TODO store real user info in DB
+			// TODO store real user info in DB
 			
 			// Create a service that has the credentials for all our clients
-			ClientDetailsService csvc = new InMemoryClientDetailsServiceBuilder()
-					// Create a client that has "read" and "write" access to the
-					// video service
-					.withClient("mobile").authorizedGrantTypes("password")
-					.authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
-					.scopes("read", "write").resourceIds("gifts")
-					.and()
-					.build();
 			
-			UserDetailsService svc = new CustomUserDetailsService();
-			
-			// Since clients have to use BASIC authentication with the client's id/secret,
-			// when sending a request for a password grant, we make each client a user
-			// as well. When the BASIC authentication information is pulled from the
-			// request, this combined UserDetailsService will authenticate that the
-			// client is a valid "user".
-			mCombinedService = new ClientAndUserDetailsService(csvc, svc);
+		}
+		
+		private ClientAndUserDetailsService getService() throws Exception
+		{
+			if (mCombinedService == null)
+			{
+				ClientDetailsService csvc = new InMemoryClientDetailsServiceBuilder()
+						// Create a client that has "read" and "write" access to the
+						// video service
+						.withClient("mobile").authorizedGrantTypes("password")
+						.authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
+						.scopes("read", "write").resourceIds("gifts")
+						.and()
+						.build();
+				
+				UserDetailsService svc = new CustomUserDetailsService(mUserRepository);
+				
+				// Since clients have to use BASIC authentication with the client's id/secret,
+				// when sending a request for a password grant, we make each client a user
+				// as well. When the BASIC authentication information is pulled from the
+				// request, this combined UserDetailsService will authenticate that the
+				// client is a valid "user".
+				mCombinedService = new ClientAndUserDetailsService(csvc, svc);
+			}
+			return mCombinedService;
 		}
 		
 		/**
@@ -157,16 +171,16 @@ public class OAuth2SecurityConfiguration
 		@Bean
 		public ClientDetailsService clientDetailsService() throws Exception
 		{
-			return mCombinedService;
+			return getService();
 		}
 		
 		/**
 		 * Return all of our user information to anyone in the framework who requests it.
 		 */
 		@Bean
-		public UserDetailsService userDetailsService()
+		public UserDetailsService userDetailsService() throws Exception
 		{
-			return mCombinedService;
+			return getService();
 		}
 		
 		/**
@@ -187,5 +201,5 @@ public class OAuth2SecurityConfiguration
 			clients.withClientDetails(clientDetailsService());
 		}
 		
-	}	
+	}
 }

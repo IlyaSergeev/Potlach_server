@@ -1,6 +1,5 @@
 package com.ilya.sergeev.potlach.auth;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,8 +9,12 @@ import com.ilya.sergeev.potlach.repository.UserInfoRepository;
 
 public class CustomUserDetailsService implements UserDetailsService
 {
-	@Autowired
-	private UserInfoRepository mUserInfoRepository;
+	private final UserInfoRepository mUserRepository;
+	
+	public CustomUserDetailsService(UserInfoRepository userRepository)
+	{
+		mUserRepository = userRepository;
+	}
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
@@ -26,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService
 		}
 		else
 		{
-			UserInfo userInfo = mUserInfoRepository.findByName(username);
+			UserInfo userInfo = mUserRepository.findByName(username);
 			return User.create(userInfo.getName(), userInfo.getPassword(), "USER");
 		}
 	}
