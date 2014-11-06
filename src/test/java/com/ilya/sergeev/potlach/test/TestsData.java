@@ -1,13 +1,17 @@
 package com.ilya.sergeev.potlach.test;
 
+import java.util.List;
 import java.util.Random;
 
 import retrofit.client.ApacheClient;
 
+import com.google.common.collect.Lists;
 import com.ilya.sergeev.potlach.client.GiftSvcApi;
 import com.ilya.sergeev.potlach.client.SecuredRestBuilder;
 import com.ilya.sergeev.potlach.client.UserInfoSvcApi;
 import com.ilya.sergeev.potlach.client.VoteSvcApi;
+import com.ilya.sergeev.potlach.repository.Gift;
+import com.ilya.sergeev.potlach.repository.UserInfo;
 
 public final class TestsData
 {
@@ -92,5 +96,52 @@ public final class TestsData
 				// .setLogLevel(LogLevel.FULL)
 				.setUsername(name).setPassword(password).setClientId(TestsData.CLIENT_ID)
 				.build().create(svcApiClass);
+	}
+	
+	public static List<Gift> createManyGiftsFromSomeUsers()
+	{
+		List<Gift> allGifts = Lists.newArrayList();
+		int userCount = TestsData.random.nextInt(5) + 2;
+		
+		for (int i = 0; i < userCount; i++)
+		{
+			GiftSvcApi api = createGiftApiWithNewUser();
+			allGifts.addAll(createNewGifts(api, TestsData.random.nextInt(10) + 1));
+		}
+		
+		return allGifts;
+	}
+	
+	public static List<Gift> createNewGifts(GiftSvcApi api, int giftCount)
+	{
+		List<Gift> result = Lists.newArrayList();
+		for (int i = 0; i < giftCount; i++)
+		{
+			Gift gift = createNewGift();
+			gift = api.createGift(gift);
+			result.add(gift);
+		}
+		return result;
+	}
+	
+	public static UserInfo createNewUser()
+	{
+		String userName = getUserName();
+		String password = getPassword();
+		UserInfoSvcApi userSvc = TestsData.getUserSvcApi(TestsData.ADMIN, TestsData.ADMIN_PASSWORD);
+		return userSvc.createUser(userName, password);
+	}
+	
+	public static GiftSvcApi createGiftApiWithNewUser()
+	{
+		UserInfo user = createNewUser();
+		return TestsData.getGiftsSvcApi(user.getName(), user.getPassword());
+	}
+	
+	public static Gift createNewGift()
+	{
+		String title = getTitle();
+		String message = getMessage();
+		return new Gift(title, message);
 	}
 }

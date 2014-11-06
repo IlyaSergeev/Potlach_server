@@ -30,9 +30,9 @@ public class GiftTests
 	@Test
 	public void testCreateGift()
 	{
-		GiftSvcApi api = createGiftApiWithNewUser();
+		GiftSvcApi api = TestsData.createGiftApiWithNewUser();
 		
-		Gift origin = createNewGift();
+		Gift origin = TestsData.createNewGift();
 		Gift gift = api.createGift(origin);
 		
 		assertEquals(origin.getTitle(), gift.getTitle());
@@ -45,7 +45,7 @@ public class GiftTests
 	@Test
 	public void testCreateGiftWithEmptyMessage()
 	{
-		GiftSvcApi api = createGiftApiWithNewUser();
+		GiftSvcApi api = TestsData.createGiftApiWithNewUser();
 		
 		String title = TestsData.getTitle();
 		
@@ -62,8 +62,8 @@ public class GiftTests
 	@Test
 	public void testLoadData() throws Exception
 	{
-		GiftSvcApi api = createGiftApiWithNewUser();
-		Gift gift = api.createGift(createNewGift());
+		GiftSvcApi api = TestsData.createGiftApiWithNewUser();
+		Gift gift = api.createGift(TestsData.createNewGift());
 		File imageFile = new File("src/test/res/image1.jpg");
 		
 		ImageStatus status = api.setImageData(gift.getId(), new TypedFile(gift.getContentType(), imageFile));
@@ -81,8 +81,8 @@ public class GiftTests
 	@Test
 	public void testGetAllGifts()
 	{
-		List<Gift> allGifts = createManyGiftsFromSomeUsers();
-		GiftSvcApi api = createGiftApiWithNewUser();
+		List<Gift> allGifts = TestsData.createManyGiftsFromSomeUsers();
+		GiftSvcApi api = TestsData.createGiftApiWithNewUser();
 		Collection<Gift> serverGifts = api.getNewGifts();
 		assertTrue(serverGifts.size() > allGifts.size());
 		for (Gift gift : allGifts)
@@ -94,62 +94,15 @@ public class GiftTests
 	@Test
 	public void testGetMyGifts()
 	{
-		createManyGiftsFromSomeUsers();
+		TestsData.createManyGiftsFromSomeUsers();
 		
-		GiftSvcApi api = createGiftApiWithNewUser();
-		List<Gift> userGifts = createNewGifts(api, TestsData.random.nextInt(10) + 1);
+		GiftSvcApi api = TestsData.createGiftApiWithNewUser();
+		List<Gift> userGifts = TestsData.createNewGifts(api, TestsData.random.nextInt(10) + 1);
 		Collection<Gift> serverUserGifts = api.getMyGifts();
 		assertEquals(userGifts.size(), serverUserGifts.size());
 		for (Gift gift : serverUserGifts)
 		{
 			assertTrue(userGifts.contains(gift));
 		}
-	}
-	
-	private List<Gift> createManyGiftsFromSomeUsers()
-	{
-		List<Gift> allGifts = Lists.newArrayList();
-		int userCount = TestsData.random.nextInt(5) + 2;
-		
-		for (int i = 0; i < userCount; i++)
-		{
-			GiftSvcApi api = createGiftApiWithNewUser();
-			allGifts.addAll(createNewGifts(api, TestsData.random.nextInt(10) + 1));
-		}
-		
-		return allGifts;
-	}
-	
-	private List<Gift> createNewGifts(GiftSvcApi api, int giftCount)
-	{
-		List<Gift> result = Lists.newArrayList();
-		for (int i = 0; i < giftCount; i++)
-		{
-			Gift gift = createNewGift();
-			gift = api.createGift(gift);
-			result.add(gift);
-		}
-		return result;
-	}
-	
-	private UserInfo createNewUser()
-	{
-		String userName = TestsData.getUserName();
-		String password = TestsData.getPassword();
-		UserInfoSvcApi userSvc = TestsData.getUserSvcApi(TestsData.ADMIN, TestsData.ADMIN_PASSWORD);
-		return userSvc.createUser(userName, password);
-	}
-	
-	private GiftSvcApi createGiftApiWithNewUser()
-	{
-		UserInfo user = createNewUser();
-		return TestsData.getGiftsSvcApi(user.getName(), user.getPassword());
-	}
-	
-	private Gift createNewGift()
-	{
-		String title = TestsData.getTitle();
-		String message = TestsData.getMessage();
-		return new Gift(title, message);
 	}
 }
