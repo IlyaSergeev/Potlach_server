@@ -11,6 +11,16 @@ import com.sun.istack.internal.NotNull;
 @Entity
 public class Vote
 {
+	public static Vote createVoteUp(String userName, long giftId)
+	{
+		return new Vote(userName, giftId, 1);
+	}
+	
+	public static Vote createVoteDown(String userName, long giftId)
+	{
+		return new Vote(userName, giftId, -1);
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
@@ -22,6 +32,21 @@ public class Vote
 	private long giftId;
 	
 	private int vote;
+	
+	public Vote(){}
+	
+	public Vote(String userName, long giftId)
+	{
+		this.userName = userName;
+		this.giftId= giftId;
+	}
+	
+	private Vote(String userName, long giftId, int voteValue)
+	{
+		this.userName = userName;
+		this.giftId= giftId;
+		this.vote = voteValue;
+	}
 	
 	public long getId()
 	{
@@ -74,7 +99,7 @@ public class Vote
 	{
 		return (obj instanceof Vote)
 				&& getGiftId() == ((Vote) obj).getGiftId()
-				&& getUserName() == ((Vote) obj).getUserName()
+				&& Objects.equal(getUserName(), ((Vote) obj).getUserName())
 				&& getVote() == ((Vote) obj).getVote();
 	}
 }

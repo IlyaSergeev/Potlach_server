@@ -3,6 +3,7 @@ package com.ilya.sergeev.potlach.client;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 import com.ilya.sergeev.potlach.repository.Vote;
 import com.ilya.sergeev.potlach.repository.VoteInfo;
@@ -11,19 +12,20 @@ public interface VoteSvcApi
 {
 	public static final String VOTE_PATH = "/votes";
 	
-	public static final String VOTE_UP_PATH = VOTE_PATH+ "{id}/up";
-	public static final String VOTE_DOWN_PATH = VOTE_PATH+ "{id}/down";
+	public static final String SINGLE_VOTE_PATH = VOTE_PATH + "/{id}"; 
 	
 	public static final String ID_PARAM = "id";
+	public static final String GIFT_ID_PARAM = "id";
+	public static final String VOTE_PARAM = "vote";
 	
 	@GET(VOTE_PATH)
-	public VoteInfo getVote(@Path(ID_PARAM)long giftId);
+	public VoteInfo getVoteOfGift(@Query(GIFT_ID_PARAM) long giftId);
 	
-	@POST(VOTE_UP_PATH)
-	public Vote sendVoteUp(@Path(ID_PARAM)long giftId);
+	@GET(SINGLE_VOTE_PATH)
+	public Vote getVote(@Path(ID_PARAM) long ig);
 	
-	@POST(VOTE_DOWN_PATH)
-	public Vote sendVoteDown(@Path(ID_PARAM)long giftId);
+	@POST(SINGLE_VOTE_PATH)
+	public Vote sendVote(@Path(ID_PARAM)long giftId, @Query(VOTE_PARAM) int voteValue);
 	
 	//TODO
 	//get top rate users

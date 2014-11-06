@@ -5,9 +5,11 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ilya.sergeev.potlach.client.VoteSvcApi;
@@ -15,15 +17,16 @@ import com.ilya.sergeev.potlach.repository.Vote;
 import com.ilya.sergeev.potlach.repository.VoteInfo;
 import com.ilya.sergeev.potlach.repository.VoteRepository;
 
+@Controller
 public class VoteController
 {
 	@Autowired
 	VoteRepository mVoteRepository;
 	
-	@PreAuthorize("hasRole('USER'")
-	@RequestMapping(value = VoteSvcApi.VOTE_PATH)
+	@PreAuthorize("hasRole('USER')")
+	@RequestMapping(value = VoteSvcApi.VOTE_PATH, method = RequestMethod.GET)
 	public @ResponseBody
-	VoteInfo getVote(@PathVariable(VoteSvcApi.ID_PARAM) long giftId, Principal principal)
+	VoteInfo getVoteOfGift(@RequestParam(VoteSvcApi.GIFT_ID_PARAM) long giftId, Principal principal)
 	{
 		VoteInfo voteInfo = new VoteInfo();
 		voteInfo.setUserVote(mVoteRepository.findByUserNameAndGiftId(principal.getName(), giftId));
@@ -51,30 +54,38 @@ public class VoteController
 		return voteInfo;
 	}
 	
-	@PreAuthorize("hasRole('USER'")
-	@RequestMapping(value = VoteSvcApi.VOTE_UP_PATH, method = RequestMethod.POST)
+	@PreAuthorize("hasRole('USER')")
+	@RequestMapping(value = VoteSvcApi.SINGLE_VOTE_PATH, method = RequestMethod.GET)
 	public @ResponseBody
-	Vote sendVoteUp(@PathVariable(VoteSvcApi.ID_PARAM) long giftId, Principal principal)
+	Vote getVote(@PathVariable(VoteSvcApi.ID_PARAM) long voteId)
 	{
-		return vote(giftId, principal.getName(), 1);
+		return mVoteRepository.findOne(voteId);
 	}
 	
-	@PreAuthorize("hasRole('USER'")
-	@RequestMapping(value = VoteSvcApi.VOTE_DOWN_PATH, method = RequestMethod.POST)
+	@PreAuthorize("hasRole('USER')")
+	@RequestMapping(value = VoteSvcApi.SINGLE_VOTE_PATH, method = RequestMethod.POST)
 	public @ResponseBody
-	Vote sendVoteDown(@PathVariable(VoteSvcApi.ID_PARAM) long giftId, Principal principal)
+	Vote sendVote(@PathVariable(VoteSvcApi.ID_PARAM) long giftId, @RequestParam(VoteSvcApi.VOTE_PARAM) int voteValue, Principal principal)
 	{
-		return vote(giftId, principal.getName(), -1);
-	}
-	
-	private Vote vote(long giftId, String userName, int voteValue)
-	{
+		String userName = principal.getName();
 		Vote vote = mVoteRepository.findByUserNameAndGiftId(userName, giftId);
 		if (vote == null)
 		{
 			vote = new Vote();
 			vote.setGiftId(giftId);
 			vote.setUserName(userName);
+		}
+		if (voteValue > 0)
+		{
+			voteValue = 1;
+		}
+		else if (voteValue < 0)
+		{
+			voteValue = -1;
+		}
+		else
+		{
+			voteValue = 0;
 		}
 		vote.setVote(voteValue);
 		return mVoteRepository.save(vote);
