@@ -19,6 +19,8 @@ public class UserInfo
 	private String name;
 	private String password;
 	
+	private int rating = 0;
+	
 	public long getId()
 	{
 		return id;
@@ -59,5 +61,15 @@ public class UserInfo
 	public boolean equals(Object obj)
 	{
 		return (obj instanceof UserInfo) && Objects.equal(getName(), ((UserInfo)obj).getName());
+	}
+
+	public int getRating()
+	{
+		return rating;
+	}
+
+	public void setRating(int rating)
+	{
+		this.rating = rating;
 	}
 }

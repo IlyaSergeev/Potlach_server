@@ -26,7 +26,4 @@ public interface VoteSvcApi
 	
 	@POST(SINGLE_VOTE_PATH)
 	public Vote sendVote(@Path(ID_PARAM)long giftId, @Query(VOTE_PARAM) int voteValue);
-	
-	//TODO
-	//get top rate users
 }
