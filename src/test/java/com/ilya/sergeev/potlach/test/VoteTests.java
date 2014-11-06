@@ -1,7 +1,8 @@
 package com.ilya.sergeev.potlach.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
+
+import java.util.Collection;
 
 import org.junit.Test;
 
@@ -166,5 +167,18 @@ public class VoteTests
 			assertEquals(1, voteInfo.getVotesDown());
 			assertEquals(vote, voteInfo.getUserVote());
 		}
+	}
+	
+	@Test
+	public void testTopRate()
+	{
+		Collection<UserInfo> users = TestsData.getUserSvcApi(TestsData.USER, TestsData.USER_PASSWORD).getTopUsers();
+		int rating = Integer.MAX_VALUE;
+		for (UserInfo user : users)
+		{
+			assertTrue(rating >= user.getRating());
+			rating = user.getRating();
+		}
+		
 	}
 }

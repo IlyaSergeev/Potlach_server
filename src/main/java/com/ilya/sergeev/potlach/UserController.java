@@ -2,7 +2,6 @@ package com.ilya.sergeev.potlach;
 
 import java.security.Principal;
 import java.util.Collection;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.collect.Lists;
 import com.ilya.sergeev.potlach.client.UserInfoSvcApi;
 import com.ilya.sergeev.potlach.repository.UserInfo;
 import com.ilya.sergeev.potlach.repository.UserInfoRepository;
@@ -96,14 +94,13 @@ public class UserController
 	
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = UserInfoSvcApi.TOP_RATE_PATH, method = RequestMethod.GET)
-	public @ResponseBody Collection<String> getTopUsers()
+	public @ResponseBody Collection<UserInfo> getTopUsers()
 	{
 		Collection<UserInfo> users = mUserRepository.getTopRate();
-		List<String> result = Lists.newArrayList();
 		for (UserInfo user : users)
 		{
-			result.add(user.getName());
+			user.setPassword(null);
 		}
-		return null;
+		return users;
 	}
 }

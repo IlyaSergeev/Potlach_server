@@ -41,5 +41,5 @@ public interface UserInfoSvcApi
 	public Response deleteUser(@Query(USER_NAME_PARAM) String userName);
 	
 	@GET(TOP_RATE_PATH)
-	public Collection<String> getTopUsers();
+	public Collection<UserInfo> getTopUsers();
 }

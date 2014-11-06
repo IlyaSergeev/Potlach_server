@@ -2,6 +2,8 @@ package com.ilya.sergeev.potlach.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collection;
+
 import org.junit.Assert;
 import org.junit.Test;
 
