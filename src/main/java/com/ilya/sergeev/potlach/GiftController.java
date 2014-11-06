@@ -56,6 +56,14 @@ public class GiftController
 	}
 	
 	@PreAuthorize("hasRole('USER')")
+	@RequestMapping(value = GiftSvcApi.SEARCH_GIFT_PATH, method = RequestMethod.GET)
+	public @ResponseBody
+	Collection<Gift> searchGifts(@RequestParam(GiftSvcApi.TAG_PARAM) String tag)
+	{
+		return Lists.newArrayList(mGiftRepository.findByTitleContainingIgnoreCase(tag));
+	}
+	
+	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.SINGLE_GIFT_PATH, method = RequestMethod.GET)
 	public @ResponseBody
 	Gift getGift(@PathVariable(GiftSvcApi.ID_PARAM) long giftId)
@@ -82,6 +90,19 @@ public class GiftController
 		return null;
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(value = GiftSvcApi.SAVE_GIFT_PATH, method = RequestMethod.POST)
+	public @ResponseBody
+	Gift saveGift(@RequestBody Gift gift, Principal principal)
+	{
+		if (gift.getId() == 0)
+		{
+			throw new IllegalArgumentException();
+		}
+		
+		return mGiftRepository.save(gift);
+	}
+	
 	private static String getPhotGiftoUrl(long giftId)
 	{
 		return String.format("%s/%d/data", GiftSvcApi.GIFT_PATH, giftId);
@@ -90,7 +111,8 @@ public class GiftController
 	@Multipart
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.GIFT_DATA_PATH, method = RequestMethod.POST)
-	public @ResponseBody ImageStatus setImageData(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, @RequestParam(GiftSvcApi.DATA_PARAMETER) MultipartFile giftData)
+	public @ResponseBody
+	ImageStatus setImageData(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, @RequestParam(GiftSvcApi.DATA_PARAMETER) MultipartFile giftData)
 	{
 		Gift gift = mGiftRepository.findOne(giftId);
 		if (gift != null)
