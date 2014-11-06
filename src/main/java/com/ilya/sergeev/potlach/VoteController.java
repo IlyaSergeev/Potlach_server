@@ -46,7 +46,7 @@ public class VoteController
 			}
 			else if (vote.getVote() < 0)
 			{
-				downVotes--;
+				downVotes++;
 			}
 		}
 		voteInfo.setVotesDown(downVotes);
