@@ -5,8 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import sun.nio.cs.ext.TIS_620;
-
 import com.google.common.base.Objects;
 import com.sun.istack.internal.NotNull;
 
@@ -24,6 +22,7 @@ public class Gift
 	private String title;
 	private String message;
 	private String url;
+	private String contentType = "image/jpg";
 	
 	@NotNull
 	private long date = System.currentTimeMillis();
@@ -113,5 +112,15 @@ public class Gift
 	public void setUserName(String userName)
 	{
 		this.userName = userName;
+	}
+
+	public String getContentType()
+	{
+		return contentType;
+	}
+
+	public void setContentType(String contentType)
+	{
+		this.contentType = contentType;
 	}
 }
