@@ -1,4 +1,4 @@
-package com.ilya.sergeev.potlach.repository;
+package com.ilya.sergeev.potlach.client;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

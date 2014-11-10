@@ -1,4 +1,4 @@
-package com.ilya.sergeev.potlach;
+package com.ilya.sergeev.potlach.client;
 
 public class SimpleMessage
 {

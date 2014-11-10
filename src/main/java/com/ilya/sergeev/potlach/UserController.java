@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ilya.sergeev.potlach.client.SimpleMessage;
+import com.ilya.sergeev.potlach.client.UserInfo;
 import com.ilya.sergeev.potlach.client.UserInfoSvcApi;
-import com.ilya.sergeev.potlach.repository.UserInfo;
 import com.ilya.sergeev.potlach.repository.UserInfoRepository;
 
 @Controller
@@ -41,7 +42,7 @@ public class UserController
 		return mUserRepository.findByName(userName);
 	}
 	
-	@PreAuthorize("hasRole('ADMIN') or isAnonymous()")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('NOT_USER')")
 	@RequestMapping(value = UserInfoSvcApi.REGISTER_USER_PATH, method = RequestMethod.POST)
 	public @ResponseBody
 	UserInfo createUser(@RequestParam(UserInfoSvcApi.USER_NAME_PARAM) String userName, @RequestParam(UserInfoSvcApi.PASSWORD_PARAM) String password)

@@ -6,12 +6,12 @@ import java.util.Collection;
 
 import org.junit.Test;
 
+import com.ilya.sergeev.potlach.client.Gift;
 import com.ilya.sergeev.potlach.client.GiftSvcApi;
+import com.ilya.sergeev.potlach.client.UserInfo;
+import com.ilya.sergeev.potlach.client.Vote;
+import com.ilya.sergeev.potlach.client.VoteInfo;
 import com.ilya.sergeev.potlach.client.VoteSvcApi;
-import com.ilya.sergeev.potlach.repository.Gift;
-import com.ilya.sergeev.potlach.repository.UserInfo;
-import com.ilya.sergeev.potlach.repository.Vote;
-import com.ilya.sergeev.potlach.repository.VoteInfo;
 
 public class VoteTests
 {

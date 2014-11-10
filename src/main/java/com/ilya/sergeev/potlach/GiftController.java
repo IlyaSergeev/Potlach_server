@@ -22,9 +22,11 @@ import retrofit.http.Multipart;
 import retrofit.http.Streaming;
 
 import com.google.common.collect.Lists;
-import com.ilya.sergeev.potlach.ImageStatus.ImageState;
+import com.ilya.sergeev.potlach.client.Gift;
 import com.ilya.sergeev.potlach.client.GiftSvcApi;
-import com.ilya.sergeev.potlach.repository.Gift;
+import com.ilya.sergeev.potlach.client.GiftsFileManager;
+import com.ilya.sergeev.potlach.client.ImageStatus;
+import com.ilya.sergeev.potlach.client.ImageStatus.ImageState;
 import com.ilya.sergeev.potlach.repository.GiftRepository;
 import com.ilya.sergeev.potlach.repository.UserInfoRepository;
 

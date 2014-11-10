@@ -4,7 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.ilya.sergeev.potlach.repository.UserInfo;
+import com.ilya.sergeev.potlach.client.UserInfo;
 import com.ilya.sergeev.potlach.repository.UserInfoRepository;
 
 public class CustomUserDetailsService implements UserDetailsService
@@ -19,18 +19,20 @@ public class CustomUserDetailsService implements UserDetailsService
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
 	{
-		if ("admin".equals(username))
+		switch (username)
 		{
-			return User.create("admin", "12345", "ADMIN", "USER");
-		}
-		else if ("user".equals(username))
-		{
-			return User.create("user", "11111", "USER");
-		}
-		else
-		{
-			UserInfo userInfo = mUserRepository.findByName(username);
-			return User.create(userInfo.getName(), userInfo.getPassword(), "USER");
+			case "admin":
+				return User.create("admin", "12345", "ADMIN", "USER");
+			
+			case "not_user":
+				return User.create("not_user", "not_user", "NOT_USER");
+				
+			case "user":
+				return User.create("user", "11111", "USER");
+				
+			default:
+				UserInfo userInfo = mUserRepository.findByName(username);
+				return User.create(userInfo.getName(), userInfo.getPassword(), "USER");
 		}
 	}
 }

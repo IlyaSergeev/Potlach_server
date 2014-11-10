@@ -5,8 +5,6 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
-import com.ilya.sergeev.potlach.repository.Vote;
-import com.ilya.sergeev.potlach.repository.VoteInfo;
 
 public interface VoteSvcApi
 {

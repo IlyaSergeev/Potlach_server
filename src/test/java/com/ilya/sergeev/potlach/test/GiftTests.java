@@ -18,10 +18,10 @@ import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
 import com.google.common.collect.Lists;
-import com.ilya.sergeev.potlach.ImageStatus;
-import com.ilya.sergeev.potlach.ImageStatus.ImageState;
+import com.ilya.sergeev.potlach.client.Gift;
 import com.ilya.sergeev.potlach.client.GiftSvcApi;
-import com.ilya.sergeev.potlach.repository.Gift;
+import com.ilya.sergeev.potlach.client.ImageStatus;
+import com.ilya.sergeev.potlach.client.ImageStatus.ImageState;
 
 public class GiftTests
 {

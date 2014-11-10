@@ -1,4 +1,4 @@
-package com.ilya.sergeev.potlach;
+package com.ilya.sergeev.potlach.client;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import com.ilya.sergeev.potlach.repository.Gift;
 
 public class GiftsFileManager
 {

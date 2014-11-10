@@ -6,12 +6,12 @@ import java.util.Random;
 import retrofit.client.ApacheClient;
 
 import com.google.common.collect.Lists;
+import com.ilya.sergeev.potlach.client.Gift;
 import com.ilya.sergeev.potlach.client.GiftSvcApi;
 import com.ilya.sergeev.potlach.client.SecuredRestBuilder;
+import com.ilya.sergeev.potlach.client.UserInfo;
 import com.ilya.sergeev.potlach.client.UserInfoSvcApi;
 import com.ilya.sergeev.potlach.client.VoteSvcApi;
-import com.ilya.sergeev.potlach.repository.Gift;
-import com.ilya.sergeev.potlach.repository.UserInfo;
 
 public final class TestsData
 {

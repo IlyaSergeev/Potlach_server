@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ilya.sergeev.potlach.client.UserInfo;
+import com.ilya.sergeev.potlach.client.Vote;
+import com.ilya.sergeev.potlach.client.VoteInfo;
 import com.ilya.sergeev.potlach.client.VoteSvcApi;
-import com.ilya.sergeev.potlach.repository.UserInfo;
 import com.ilya.sergeev.potlach.repository.UserInfoRepository;
-import com.ilya.sergeev.potlach.repository.Vote;
-import com.ilya.sergeev.potlach.repository.VoteInfo;
 import com.ilya.sergeev.potlach.repository.VoteRepository;
 
 @Controller

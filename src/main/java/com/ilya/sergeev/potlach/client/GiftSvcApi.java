@@ -13,8 +13,6 @@ import retrofit.http.Query;
 import retrofit.http.Streaming;
 import retrofit.mime.TypedFile;
 
-import com.ilya.sergeev.potlach.ImageStatus;
-import com.ilya.sergeev.potlach.repository.Gift;
 
 public interface GiftSvcApi
 {

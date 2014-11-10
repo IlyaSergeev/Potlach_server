@@ -2,14 +2,12 @@ package com.ilya.sergeev.potlach.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Collection;
-
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.ilya.sergeev.potlach.SimpleMessage;
+import com.ilya.sergeev.potlach.client.SimpleMessage;
+import com.ilya.sergeev.potlach.client.UserInfo;
 import com.ilya.sergeev.potlach.client.UserInfoSvcApi;
-import com.ilya.sergeev.potlach.repository.UserInfo;
 
 public class UserTests
 {
@@ -112,5 +110,20 @@ public class UserTests
 		catch (Exception ex)
 		{
 		}
+	}
+	
+	@Test
+	public void testUnothorizeUserRegistration()
+	{
+		UserInfoSvcApi userInfoSvcApi = TestsData.getUserSvcApi("not_user", "not_user");
+		
+		String userName = TestsData.getUserName();
+		String password = TestsData.getPassword();
+		userInfoSvcApi.createUser(userName, password);
+		
+		UserInfoSvcApi newUserApi = TestsData.getUserSvcApi(userName, password);
+		SimpleMessage msg = newUserApi.getHello();
+		assertEquals(userName, msg.getUserName());
+		assertEquals("Hello world", msg.getMessage());
 	}
 }

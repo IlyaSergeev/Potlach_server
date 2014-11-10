@@ -2,8 +2,6 @@ package com.ilya.sergeev.potlach.client;
 
 import java.util.Collection;
 
-import com.ilya.sergeev.potlach.SimpleMessage;
-import com.ilya.sergeev.potlach.repository.UserInfo;
 
 import retrofit.client.Response;
 import retrofit.http.GET;

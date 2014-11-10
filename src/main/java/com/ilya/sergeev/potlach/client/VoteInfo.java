@@ -1,4 +1,4 @@
-package com.ilya.sergeev.potlach.repository;
+package com.ilya.sergeev.potlach.client;
 
 public class VoteInfo
 {
