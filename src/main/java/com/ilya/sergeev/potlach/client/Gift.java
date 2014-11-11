@@ -21,7 +21,6 @@ public class Gift
 	@NotNull
 	private String title;
 	private String message;
-	private String url;
 	private String contentType = "image/jpg";
 	
 	@NotNull
@@ -68,20 +67,10 @@ public class Gift
 		this.message = message;
 	}
 	
-	public String getUrl()
-	{
-		return url;
-	}
-	
-	public void setUrl(String url)
-	{
-		this.url = url;
-	}
-	
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(getUserName(), getTitle(), getMessage(), getUrl());
+		return Objects.hashCode(getUserName(), getTitle(), getMessage());
 	}
 	
 	@Override
@@ -90,8 +79,7 @@ public class Gift
 		return (obj instanceof Gift)
 				&& Objects.equal(getUserName(), ((Gift) obj).getUserName())
 				&& Objects.equal(getTitle(), ((Gift) obj).getTitle())
-				&& Objects.equal(getMessage(), ((Gift) obj).getMessage())
-				&& Objects.equal(getUrl(), ((Gift) obj).getUrl());
+				&& Objects.equal(getMessage(), ((Gift) obj).getMessage());
 	}
 	
 	public long getDate()

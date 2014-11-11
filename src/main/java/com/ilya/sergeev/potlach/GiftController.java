@@ -86,7 +86,6 @@ public class GiftController
 		gift = mGiftRepository.save(gift);
 		if (gift.getId() > 0)
 		{
-			gift.setUrl(getPhotGiftoUrl(gift.getId()));
 			return mGiftRepository.save(gift);
 		}
 		return null;
@@ -103,11 +102,6 @@ public class GiftController
 		}
 		
 		return mGiftRepository.save(gift);
-	}
-	
-	private static String getPhotGiftoUrl(long giftId)
-	{
-		return String.format("%s/%d/data", GiftSvcApi.GIFT_PATH, giftId);
 	}
 	
 	@Multipart
