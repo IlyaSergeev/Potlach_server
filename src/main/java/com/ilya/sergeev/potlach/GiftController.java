@@ -3,6 +3,8 @@ package com.ilya.sergeev.potlach;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -46,7 +48,7 @@ public class GiftController
 	public @ResponseBody
 	Collection<Gift> getAllGifts()
 	{
-		return Lists.newArrayList(mGiftRepository.findAll());
+		return reverse(mGiftRepository.findAll());
 	}
 	
 	@PreAuthorize("hasRole('USER')")
@@ -54,7 +56,7 @@ public class GiftController
 	public @ResponseBody
 	Collection<Gift> getMyGifts(Principal principal)
 	{
-		return Lists.newArrayList(mGiftRepository.findByUserName(principal.getName()));
+		return reverse(mGiftRepository.findByUserName(principal.getName()));
 	}
 	
 	@PreAuthorize("hasRole('USER')")
@@ -62,7 +64,7 @@ public class GiftController
 	public @ResponseBody
 	Collection<Gift> getGiftsByUserName(@RequestParam(GiftSvcApi.USER_PARAM) String userName)
 	{
-		return Lists.newArrayList(mGiftRepository.findByUserName(userName));
+		return reverse(mGiftRepository.findByUserName(userName));
 	}
 	
 	@PreAuthorize("hasRole('USER')")
@@ -70,7 +72,7 @@ public class GiftController
 	public @ResponseBody
 	Collection<Gift> searchGifts(@RequestParam(GiftSvcApi.TAG_PARAM) String tag)
 	{
-		return Lists.newArrayList(mGiftRepository.findByTitleContainingIgnoreCase(tag));
+		return reverse(mGiftRepository.findByTitleContainingIgnoreCase(tag));
 	}
 	
 	@PreAuthorize("hasRole('USER')")
@@ -158,5 +160,12 @@ public class GiftController
 			e.printStackTrace();
 			throw new ResourceNotFoundException();
 		}
+	}
+	
+	private List<Gift> reverse(Iterable<Gift> gifts)
+	{
+		List<Gift> giftsList = Lists.newArrayList(gifts);
+		Collections.reverse(giftsList);
+		return giftsList;
 	}
 }
