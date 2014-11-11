@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService
 		switch (username)
 		{
 			case "admin":
-				return User.create("admin", "12345", "ADMIN", "USER");
+				return User.create("admin", "12345", "ADMIN");
 			
 			case "not_user":
 				return User.create("not_user", "not_user", "NOT_USER");
