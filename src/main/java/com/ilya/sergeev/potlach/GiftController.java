@@ -30,7 +30,7 @@ import com.ilya.sergeev.potlach.client.ImageStatus.ImageState;
 import com.ilya.sergeev.potlach.repository.GiftRepository;
 import com.ilya.sergeev.potlach.repository.UserInfoRepository;
 
-//TODO make limits in futures
+//TODO make paging in future
 
 @Controller
 public class GiftController
@@ -42,9 +42,9 @@ public class GiftController
 	GiftRepository mGiftRepository;
 	
 	@PreAuthorize("hasRole('USER')")
-	@RequestMapping(value = GiftSvcApi.NEW_GIFT_PATH, method = RequestMethod.GET)
+	@RequestMapping(value = GiftSvcApi.ALL_GIFT_PATH, method = RequestMethod.GET)
 	public @ResponseBody
-	Collection<Gift> getNewGifts()
+	Collection<Gift> getAllGifts()
 	{
 		return Lists.newArrayList(mGiftRepository.findAll());
 	}
@@ -55,6 +55,14 @@ public class GiftController
 	Collection<Gift> getMyGifts(Principal principal)
 	{
 		return Lists.newArrayList(mGiftRepository.findByUserName(principal.getName()));
+	}
+	
+	@PreAuthorize("hasRole('USER')")
+	@RequestMapping(value = GiftSvcApi.GIFT_PATH, method = RequestMethod.GET)
+	public @ResponseBody
+	Collection<Gift> getGiftsByUserName(@RequestParam(GiftSvcApi.USER_PARAM) String userName)
+	{
+		return Lists.newArrayList(mGiftRepository.findByUserName(userName));
 	}
 	
 	@PreAuthorize("hasRole('USER')")

@@ -22,6 +22,7 @@ import com.ilya.sergeev.potlach.client.Gift;
 import com.ilya.sergeev.potlach.client.GiftSvcApi;
 import com.ilya.sergeev.potlach.client.ImageStatus;
 import com.ilya.sergeev.potlach.client.ImageStatus.ImageState;
+import com.ilya.sergeev.potlach.client.UserInfo;
 
 public class GiftTests
 {
@@ -81,7 +82,7 @@ public class GiftTests
 	{
 		List<Gift> allGifts = TestsData.createManyGiftsFromSomeUsers();
 		GiftSvcApi api = TestsData.createGiftApiWithNewUser();
-		Collection<Gift> serverGifts = api.getNewGifts();
+		Collection<Gift> serverGifts = api.getAllGifts();
 		assertTrue(serverGifts.size() > allGifts.size());
 		for (Gift gift : allGifts)
 		{
@@ -97,6 +98,24 @@ public class GiftTests
 		GiftSvcApi api = TestsData.createGiftApiWithNewUser();
 		List<Gift> userGifts = TestsData.createNewGifts(api, TestsData.random.nextInt(10) + 1);
 		Collection<Gift> serverUserGifts = api.getMyGifts();
+		assertEquals(userGifts.size(), serverUserGifts.size());
+		for (Gift gift : serverUserGifts)
+		{
+			assertTrue(userGifts.contains(gift));
+		}
+	}
+	
+	@Test
+	public void testGetUserGifts()
+	{
+		TestsData.createManyGiftsFromSomeUsers();
+		
+		UserInfo user = TestsData.createNewUser();
+		GiftSvcApi giftsApi = TestsData.getGiftsSvcApi(user.getName(), user.getPassword());
+		List<Gift> userGifts = TestsData.createNewGifts(giftsApi, TestsData.random.nextInt(30) + 3);
+		
+		GiftSvcApi newApi = TestsData.createGiftApiWithNewUser();
+		Collection<Gift> serverUserGifts = newApi.getGifts(user.getName());
 		assertEquals(userGifts.size(), serverUserGifts.size());
 		for (Gift gift : serverUserGifts)
 		{

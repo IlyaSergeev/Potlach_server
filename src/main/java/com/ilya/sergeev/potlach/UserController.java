@@ -47,6 +47,10 @@ public class UserController
 	public @ResponseBody
 	UserInfo createUser(@RequestParam(UserInfoSvcApi.USER_NAME_PARAM) String userName, @RequestParam(UserInfoSvcApi.PASSWORD_PARAM) String password)
 	{
+		if (userName.length() < 5)
+		{
+			throw new IllegalArgumentException("Length of user name must be more 5 symbols or more");
+		}
 		UserInfo newUser = new UserInfo();
 		newUser.setName(userName);
 		newUser.setPassword(password);
