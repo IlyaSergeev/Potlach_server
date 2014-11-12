@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ilya.sergeev.potlach.client.UserInfo;
 import com.ilya.sergeev.potlach.client.Vote;
 import com.ilya.sergeev.potlach.client.VoteSvcApi;
-import com.ilya.sergeev.potlach.repository.UserInfoRepository;
 import com.ilya.sergeev.potlach.repository.VoteRepository;
 
 @Controller
@@ -22,8 +20,6 @@ public class VoteController
 {
 	@Autowired
 	VoteRepository mVoteRepository;
-	
-	@Autowired UserInfoRepository mUserRepository;
 	
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = VoteSvcApi.VOTE_PATH, method = RequestMethod.GET)
@@ -55,7 +51,7 @@ public class VoteController
 			vote.setGiftId(giftId);
 			vote.setUserName(userName);
 		}
-		int oldVote = vote.getVote();
+		
 		if (voteValue > 0)
 		{
 			voteValue = 1;
@@ -64,15 +60,7 @@ public class VoteController
 		{
 			voteValue = -1;
 		}
-		else
-		{
-			voteValue = 0;
-		}		
-		
 		vote.setVote(voteValue);
-		
-		UserInfo user = mUserRepository.findByName(userName);
-		user.setRating(user.getRating() - oldVote + voteValue);
 		
 		return mVoteRepository.save(vote);
 	}

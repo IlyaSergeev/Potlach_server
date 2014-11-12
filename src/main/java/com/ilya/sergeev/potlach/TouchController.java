@@ -12,13 +12,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ilya.sergeev.potlach.client.Touch;
 import com.ilya.sergeev.potlach.client.TouchSvcApi;
+import com.ilya.sergeev.potlach.client.UserInfo;
 import com.ilya.sergeev.potlach.repository.TouchRepository;
+import com.ilya.sergeev.potlach.repository.UserInfoRepository;
 
 @Controller
 public class TouchController
 {
 	@Autowired
 	TouchRepository mTouchRepository;
+	
+	@Autowired
+	UserInfoRepository mUserRepository;
 	
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = TouchSvcApi.TOUCH_PATH, method = RequestMethod.POST)
@@ -32,6 +37,10 @@ public class TouchController
 			touch = new Touch(userName, giftId);
 			touch = mTouchRepository.save(touch);
 		}
+		
+		UserInfo user = mUserRepository.findByName(userName);
+		user.setRating(user.getRating() + 1);
+		
 		return touch;
 	}
 }
