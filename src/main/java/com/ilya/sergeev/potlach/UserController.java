@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -47,9 +48,9 @@ public class UserController
 	public @ResponseBody
 	UserInfo createUser(@RequestParam(UserInfoSvcApi.USER_NAME_PARAM) String userName, @RequestParam(UserInfoSvcApi.PASSWORD_PARAM) String password)
 	{
-		if (userName.length() < 5)
+		if (TextUtils.isEmpty(userName))
 		{
-			throw new IllegalArgumentException("Length of user name must be more 5 symbols or more");
+			throw new IllegalArgumentException("Name of user must not be empty");
 		}
 		UserInfo newUser = new UserInfo();
 		newUser.setName(userName);

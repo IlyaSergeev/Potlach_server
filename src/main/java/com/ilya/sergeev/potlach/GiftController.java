@@ -122,7 +122,7 @@ public class GiftController
 	
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.TOUCH_GIFT_PATH, method = RequestMethod.POST)
-	public GiftInfo touchGift(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, Principal principal)
+	public @ResponseBody GiftInfo touchGift(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, Principal principal)
 	{
 		String userName = principal.getName();
 		Gift gift = mGiftRepository.findOne(giftId);
