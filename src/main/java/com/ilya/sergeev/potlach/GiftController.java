@@ -30,7 +30,10 @@ import com.ilya.sergeev.potlach.client.GiftSvcApi;
 import com.ilya.sergeev.potlach.client.GiftsFileManager;
 import com.ilya.sergeev.potlach.client.ImageStatus;
 import com.ilya.sergeev.potlach.client.ImageStatus.ImageState;
+import com.ilya.sergeev.potlach.client.Touch;
+import com.ilya.sergeev.potlach.client.Vote;
 import com.ilya.sergeev.potlach.repository.GiftRepository;
+import com.ilya.sergeev.potlach.repository.TouchRepository;
 import com.ilya.sergeev.potlach.repository.UserInfoRepository;
 import com.ilya.sergeev.potlach.repository.VoteRepository;
 
@@ -42,6 +45,9 @@ public class GiftController
 	
 	@Autowired
 	VoteRepository mVoteRepository;
+	
+	@Autowired
+	TouchRepository mTouchRepository;
 	
 	@Autowired
 	GiftRepository mGiftRepository;
@@ -84,7 +90,12 @@ public class GiftController
 	public @ResponseBody
 	GiftInfo getGift(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, Principal principal)
 	{
-		return new GiftInfo(mGiftRepository.findOne(giftId), mVoteRepository.findByUserNameAndGiftId(principal.getName(), giftId));
+		String userName = principal.getName();
+		Gift gift = mGiftRepository.findOne(giftId);
+		Vote vote = mVoteRepository.findByUserNameAndGiftId(userName, giftId);
+		Touch touch = mTouchRepository.findOneByUserNameAndGiftId(userName, giftId);
+		
+		return new GiftInfo(gift, vote, touch != null);
 	}
 	
 	@PreAuthorize("hasRole('USER')")
@@ -122,7 +133,7 @@ public class GiftController
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.GIFT_DATA_PATH, method = RequestMethod.POST)
 	public @ResponseBody
-	ImageStatus setImageData(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, @RequestParam(GiftSvcApi.DATA_PARAMETER) MultipartFile giftData)
+	ImageStatus setImageData(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, @RequestParam(GiftSvcApi.DATA_PARAM) MultipartFile giftData)
 	{
 		Gift gift = mGiftRepository.findOne(giftId);
 		if (gift != null)
@@ -174,7 +185,9 @@ public class GiftController
 		List<GiftInfo> giftsInfoList = Lists.newArrayList();
 		for (Gift gift : giftsList)
 		{
-			giftsInfoList.add(new GiftInfo(gift, mVoteRepository.findByUserNameAndGiftId(userName, gift.getId())));
+			Vote vote = mVoteRepository.findByUserNameAndGiftId(userName, gift.getId());
+			Touch touch = mTouchRepository.findOneByUserNameAndGiftId(userName, gift.getId());
+			giftsInfoList.add(new GiftInfo(gift, vote, touch != null));
 		}
 		
 		return giftsInfoList;

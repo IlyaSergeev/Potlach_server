@@ -21,7 +21,6 @@ public class Gift
 	@NotNull
 	private String title;
 	private String message = null;
-	private int rating = 0;
 	private String contentType = "image/jpg";
 	
 	@NotNull
@@ -71,7 +70,7 @@ public class Gift
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(getOwner(), getTitle(), getMessage(), getRating());
+		return Objects.hashCode(getOwner(), getTitle(), getMessage());
 	}
 	
 	@Override
@@ -80,8 +79,7 @@ public class Gift
 		return (obj instanceof Gift)
 				&& Objects.equal(getOwner(), ((Gift) obj).getOwner())
 				&& Objects.equal(getTitle(), ((Gift) obj).getTitle())
-				&& Objects.equal(getMessage(), ((Gift) obj).getMessage())
-				&& getRating() == ((Gift) obj).getRating();
+				&& Objects.equal(getMessage(), ((Gift) obj).getMessage());
 	}
 	
 	public long getDate()
@@ -112,15 +110,5 @@ public class Gift
 	public void setContentType(String contentType)
 	{
 		this.contentType = contentType;
-	}
-
-	public int getRating()
-	{
-		return rating;
-	}
-
-	public void setRating(int rating)
-	{
-		this.rating = rating;
 	}
 }

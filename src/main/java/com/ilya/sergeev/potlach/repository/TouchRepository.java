@@ -10,7 +10,7 @@ import com.ilya.sergeev.potlach.client.Touch;
 @Repository
 public interface TouchRepository extends CrudRepository<Touch, Long>
 {
-	public Touch findByUserNameAndGiftId(String userName, long giftId);
+	public Touch findOneByUserNameAndGiftId(String userName, long giftId);
 	
 	public Collection<Touch> findByGiftId(long giftId);
 	

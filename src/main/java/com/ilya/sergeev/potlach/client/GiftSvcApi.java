@@ -28,7 +28,7 @@ public interface GiftSvcApi
 	
 	public static final String ID_PARAM = "id";
 	public static final String TAG_PARAM = "tag";
-	public static final String DATA_PARAMETER = "data";
+	public static final String DATA_PARAM = "data";
 	public static final String USER_PARAM = "user";
 	
 	@GET(ALL_GIFT_PATH)
@@ -54,7 +54,7 @@ public interface GiftSvcApi
 	
 	@Multipart
 	@POST(GIFT_DATA_PATH)
-	public ImageStatus setImageData(@Path(ID_PARAM) long id, @Part(DATA_PARAMETER) TypedFile imageFile);
+	public ImageStatus setImageData(@Path(ID_PARAM) long id, @Part(DATA_PARAM) TypedFile imageFile);
 	
 	@Streaming
 	@GET(GIFT_DATA_PATH)
