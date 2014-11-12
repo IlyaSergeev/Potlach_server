@@ -25,14 +25,15 @@ import retrofit.http.Streaming;
 
 import com.google.common.collect.Lists;
 import com.ilya.sergeev.potlach.client.Gift;
+import com.ilya.sergeev.potlach.client.GiftInfo;
 import com.ilya.sergeev.potlach.client.GiftSvcApi;
 import com.ilya.sergeev.potlach.client.GiftsFileManager;
 import com.ilya.sergeev.potlach.client.ImageStatus;
 import com.ilya.sergeev.potlach.client.ImageStatus.ImageState;
+import com.ilya.sergeev.potlach.client.UserInfo;
 import com.ilya.sergeev.potlach.repository.GiftRepository;
 import com.ilya.sergeev.potlach.repository.UserInfoRepository;
-
-//TODO make paging in future
+import com.ilya.sergeev.potlach.repository.VoteRepository;
 
 @Controller
 public class GiftController
@@ -41,46 +42,50 @@ public class GiftController
 	UserInfoRepository mUserRepository;
 	
 	@Autowired
+	VoteRepository mVoteRepository;
+	
+	@Autowired
 	GiftRepository mGiftRepository;
 	
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.ALL_GIFT_PATH, method = RequestMethod.GET)
 	public @ResponseBody
-	Collection<Gift> getAllGifts()
+	Collection<GiftInfo> getAllGifts(Principal principal)
 	{
-		return reverse(mGiftRepository.findAll());
+		return reverse(mGiftRepository.findAll(), principal.getName());
 	}
 	
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.MY_GIFT_PATH, method = RequestMethod.GET)
 	public @ResponseBody
-	Collection<Gift> getMyGifts(Principal principal)
+	Collection<GiftInfo> getMyGifts(Principal principal)
 	{
-		return reverse(mGiftRepository.findByUserName(principal.getName()));
+		String userName = principal.getName();
+		return reverse(mGiftRepository.findByUserName(userName), userName);
 	}
 	
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.GIFT_PATH, method = RequestMethod.GET)
 	public @ResponseBody
-	Collection<Gift> getGiftsByUserName(@RequestParam(GiftSvcApi.USER_PARAM) String userName)
+	Collection<GiftInfo> getGiftsByUserName(@RequestParam(GiftSvcApi.USER_PARAM) String userName, Principal principal)
 	{
-		return reverse(mGiftRepository.findByUserName(userName));
+		return reverse(mGiftRepository.findByUserName(userName), principal.getName());
 	}
 	
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.SEARCH_GIFT_PATH, method = RequestMethod.GET)
 	public @ResponseBody
-	Collection<Gift> searchGifts(@RequestParam(GiftSvcApi.TAG_PARAM) String tag)
+	Collection<GiftInfo> searchGifts(@RequestParam(GiftSvcApi.TAG_PARAM) String tag, Principal principal)
 	{
-		return reverse(mGiftRepository.findByTitleContainingIgnoreCase(tag));
+		return reverse(mGiftRepository.findByTitleContainingIgnoreCase(tag), principal.getName());
 	}
 	
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = GiftSvcApi.SINGLE_GIFT_PATH, method = RequestMethod.GET)
 	public @ResponseBody
-	Gift getGift(@PathVariable(GiftSvcApi.ID_PARAM) long giftId)
+	GiftInfo getGift(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, Principal principal)
 	{
-		return mGiftRepository.findOne(giftId);
+		return new GiftInfo(mGiftRepository.findOne(giftId), mVoteRepository.findByUserNameAndGiftId(principal.getName(), giftId));
 	}
 	
 	@PreAuthorize("hasRole('USER')")
@@ -112,6 +117,21 @@ public class GiftController
 		}
 		
 		return mGiftRepository.save(gift);
+	}
+	
+	@PreAuthorize("hasRole('USER')")
+	@RequestMapping(value = GiftSvcApi.TOUCH_GIFT_PATH, method = RequestMethod.POST)
+	public GiftInfo touchGift(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, Principal principal)
+	{
+		Gift gift = mGiftRepository.findOne(giftId);
+		gift.setRating(gift.getRating() + 1);
+		mGiftRepository.save(gift);
+		
+		UserInfo user = mUserRepository.findByName(gift.getUserName());
+		user.setRating(user.getRating() + 1);
+		mUserRepository.save(user);
+		
+		return new GiftInfo(gift, mVoteRepository.findByUserNameAndGiftId(principal.getName(), giftId));
 	}
 	
 	@Multipart
@@ -162,10 +182,17 @@ public class GiftController
 		}
 	}
 	
-	private List<Gift> reverse(Iterable<Gift> gifts)
+	private List<GiftInfo> reverse(Iterable<Gift> gifts, String userName)
 	{
 		List<Gift> giftsList = Lists.newArrayList(gifts);
 		Collections.reverse(giftsList);
-		return giftsList;
+		
+		List<GiftInfo> giftsInfoList = Lists.newArrayList();
+		for (Gift gift : giftsList)
+		{
+			giftsInfoList.add(new GiftInfo(gift, mVoteRepository.findByUserNameAndGiftId(userName, gift.getId())));
+		}
+		
+		return giftsInfoList;
 	}
 }

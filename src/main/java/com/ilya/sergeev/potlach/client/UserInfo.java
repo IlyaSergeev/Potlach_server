@@ -21,6 +21,17 @@ public class UserInfo
 	
 	private int rating = 0;
 	
+	public UserInfo()
+	{
+		
+	}
+	
+	public UserInfo(String name, String password)
+	{
+		this.name = name;
+		this.password = password;
+	}
+	
 	public long getId()
 	{
 		return id;

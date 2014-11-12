@@ -20,7 +20,8 @@ public class Gift
 	
 	@NotNull
 	private String title;
-	private String message;
+	private String message = null;
+	private int rating = 0;
 	private String contentType = "image/jpg";
 	
 	@NotNull
@@ -110,5 +111,15 @@ public class Gift
 	public void setContentType(String contentType)
 	{
 		this.contentType = contentType;
+	}
+
+	public int getRating()
+	{
+		return rating;
+	}
+
+	public void setRating(int rating)
+	{
+		this.rating = rating;
 	}
 }

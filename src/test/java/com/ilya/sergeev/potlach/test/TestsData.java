@@ -3,6 +3,7 @@ package com.ilya.sergeev.potlach.test;
 import java.util.List;
 import java.util.Random;
 
+import retrofit.RestAdapter;
 import retrofit.client.ApacheClient;
 
 import com.google.common.collect.Lists;
@@ -11,7 +12,6 @@ import com.ilya.sergeev.potlach.client.GiftSvcApi;
 import com.ilya.sergeev.potlach.client.SecuredRestBuilder;
 import com.ilya.sergeev.potlach.client.UserInfo;
 import com.ilya.sergeev.potlach.client.UserInfoSvcApi;
-import com.ilya.sergeev.potlach.client.VoteSvcApi;
 
 public final class TestsData
 {
@@ -38,12 +38,16 @@ public final class TestsData
 	
 	public final static String ADMIN = "admin";
 	public final static String ADMIN_PASSWORD = "12345";
+	public final static UserInfo ADMIN_USER = new UserInfo(ADMIN, ADMIN_PASSWORD);
+	
+	public final static UserInfo NOT_USER = new UserInfo("not_user", "not_user");
+	
 	public final static String BAD_PASSWORD = "12345" + random.nextInt();
 	public final static String CLIENT_ID = "mobile";
 	
 	public static String getUserName()
 	{
-		return "user_" + (int)System.currentTimeMillis(); 
+		return "user_" + (int) System.currentTimeMillis();
 	}
 	
 	public static String getPassword()
@@ -72,22 +76,12 @@ public final class TestsData
 		return prefix + random.nextInt();
 	}
 	
-	public static UserInfoSvcApi getUserSvcApi(String name, String password)
+	public static RestAdapter getRestAdapter(UserInfo user)
 	{
-		return getSvcApi(UserInfoSvcApi.class, name, password);
+		return getRestAdapter(user.getName(), user.getPassword());
 	}
 	
-	public static GiftSvcApi getGiftsSvcApi(String name, String password)
-	{
-		return getSvcApi(GiftSvcApi.class, name, password);
-	}
-	
-	public static VoteSvcApi getVoteSvcApi(String name, String password)
-	{
-		return getSvcApi(VoteSvcApi.class, name, password);
-	}
-	
-	public static <T> T getSvcApi(Class<T> svcApiClass, String name, String password)
+	public static RestAdapter getRestAdapter(String name, String password)
 	{
 		return new SecuredRestBuilder()
 				.setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient()))
@@ -95,7 +89,7 @@ public final class TestsData
 				.setLoginEndpoint(TestsData.TEST_URL + UserInfoSvcApi.TOKEN_PATH)
 				// .setLogLevel(LogLevel.FULL)
 				.setUsername(name).setPassword(password).setClientId(TestsData.CLIENT_ID)
-				.build().create(svcApiClass);
+				.build();
 	}
 	
 	public static List<Gift> createManyGiftsFromSomeUsers()
@@ -105,7 +99,8 @@ public final class TestsData
 		
 		for (int i = 0; i < userCount; i++)
 		{
-			GiftSvcApi api = createGiftApiWithNewUser();
+			UserInfo user = createNewUser();
+			GiftSvcApi api = TestsData.getRestAdapter(user.getName(), user.getPassword()).create(GiftSvcApi.class);
 			allGifts.addAll(createNewGifts(api, TestsData.random.nextInt(10) + 1));
 		}
 		
@@ -128,14 +123,8 @@ public final class TestsData
 	{
 		String userName = getUserName();
 		String password = getPassword();
-		UserInfoSvcApi userSvc = TestsData.getUserSvcApi(TestsData.ADMIN, TestsData.ADMIN_PASSWORD);
+		UserInfoSvcApi userSvc = TestsData.getRestAdapter(TestsData.ADMIN, TestsData.ADMIN_PASSWORD).create(UserInfoSvcApi.class);
 		return userSvc.createUser(userName, password);
-	}
-	
-	public static GiftSvcApi createGiftApiWithNewUser()
-	{
-		UserInfo user = createNewUser();
-		return TestsData.getGiftsSvcApi(user.getName(), user.getPassword());
 	}
 	
 	public static Gift createNewGift()

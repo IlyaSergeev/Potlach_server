@@ -11,9 +11,9 @@ import com.ilya.sergeev.potlach.client.UserInfoSvcApi;
 
 public class UserTests
 {
-	private UserInfoSvcApi userInfoSvcAdminGood = TestsData.getUserSvcApi(TestsData.ADMIN, TestsData.ADMIN_PASSWORD);
-	private UserInfoSvcApi userInfoSvcAdminBad = TestsData.getUserSvcApi(TestsData.ADMIN, TestsData.BAD_PASSWORD);
-	private UserInfoSvcApi userInfoSvcGood = TestsData.getUserSvcApi(TestsData.USER, TestsData.USER_PASSWORD);
+	private UserInfoSvcApi userInfoSvcAdminGood = TestsData.getRestAdapter(TestsData.ADMIN_USER).create(UserInfoSvcApi.class);
+	private UserInfoSvcApi userInfoSvcAdminBad = TestsData.getRestAdapter(TestsData.ADMIN, TestsData.BAD_PASSWORD).create(UserInfoSvcApi.class);
+	private UserInfoSvcApi userInfoSvcGood = TestsData.getRestAdapter(TestsData.USER, TestsData.USER_PASSWORD).create(UserInfoSvcApi.class);
 	
 	@Test
 	public void testGetHello() throws Exception
@@ -115,13 +115,13 @@ public class UserTests
 	@Test
 	public void testUnothorizeUserRegistration()
 	{
-		UserInfoSvcApi userInfoSvcApi = TestsData.getUserSvcApi("not_user", "not_user");
+		UserInfoSvcApi userInfoSvcApi = TestsData.getRestAdapter(TestsData.NOT_USER).create(UserInfoSvcApi.class);
 		
 		String userName = TestsData.getUserName();
 		String password = TestsData.getPassword();
 		userInfoSvcApi.createUser(userName, password);
 		
-		UserInfoSvcApi newUserApi = TestsData.getUserSvcApi(userName, password);
+		UserInfoSvcApi newUserApi = TestsData.getRestAdapter(userName, password).create(UserInfoSvcApi.class);
 		SimpleMessage msg = newUserApi.getHello();
 		assertEquals(userName, msg.getUserName());
 		assertEquals("Hello world", msg.getMessage());
