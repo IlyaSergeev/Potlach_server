@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import retrofit.http.Multipart;
 import retrofit.http.Streaming;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.ilya.sergeev.potlach.client.Gift;
 import com.ilya.sergeev.potlach.client.GiftInfo;
@@ -31,7 +30,6 @@ import com.ilya.sergeev.potlach.client.GiftSvcApi;
 import com.ilya.sergeev.potlach.client.GiftsFileManager;
 import com.ilya.sergeev.potlach.client.ImageStatus;
 import com.ilya.sergeev.potlach.client.ImageStatus.ImageState;
-import com.ilya.sergeev.potlach.client.UserInfo;
 import com.ilya.sergeev.potlach.repository.GiftRepository;
 import com.ilya.sergeev.potlach.repository.UserInfoRepository;
 import com.ilya.sergeev.potlach.repository.VoteRepository;
@@ -118,25 +116,6 @@ public class GiftController
 		}
 		
 		return mGiftRepository.save(gift);
-	}
-	
-	@PreAuthorize("hasRole('USER')")
-	@RequestMapping(value = GiftSvcApi.TOUCH_GIFT_PATH, method = RequestMethod.POST)
-	public @ResponseBody GiftInfo touchGift(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, Principal principal)
-	{
-		String userName = principal.getName();
-		Gift gift = mGiftRepository.findOne(giftId);
-		if (!Objects.equal(gift.getOwner(), userName))
-		{
-			gift.setRating(gift.getRating() + 1);
-			mGiftRepository.save(gift);
-			
-			UserInfo user = mUserRepository.findByName(gift.getOwner());
-			user.setRating(user.getRating() + 1);
-			mUserRepository.save(user);
-		}
-		
-		return new GiftInfo(gift, mVoteRepository.findByUserNameAndGiftId(userName, giftId));
 	}
 	
 	@Multipart

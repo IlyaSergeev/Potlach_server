@@ -15,12 +15,13 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.ilya.sergeev.potlach.auth.OAuth2SecurityConfiguration;
 import com.ilya.sergeev.potlach.repository.GiftRepository;
+import com.ilya.sergeev.potlach.repository.TouchRepository;
 import com.ilya.sergeev.potlach.repository.UserInfoRepository;
 import com.ilya.sergeev.potlach.repository.VoteRepository;
 
 @EnableAutoConfiguration
 @EnableWebMvc
-@EnableJpaRepositories(basePackageClasses = { UserInfoRepository.class, GiftRepository.class, VoteRepository.class })
+@EnableJpaRepositories(basePackageClasses = { UserInfoRepository.class, GiftRepository.class, VoteRepository.class, TouchRepository.class })
 @Configuration
 @ComponentScan
 @Import(OAuth2SecurityConfiguration.class)
