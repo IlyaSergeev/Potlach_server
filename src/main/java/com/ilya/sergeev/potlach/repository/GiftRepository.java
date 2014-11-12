@@ -11,5 +11,5 @@ import com.ilya.sergeev.potlach.client.Gift;
 public interface GiftRepository extends CrudRepository<Gift, Long>
 {
 	public Collection<Gift> findByTitleContainingIgnoreCase(String title);
-	public Collection<Gift> findByUserName(String userName);
+	public Collection<Gift> findByOwner(String owner);
 }

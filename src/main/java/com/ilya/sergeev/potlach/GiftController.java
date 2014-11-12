@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import retrofit.http.Multipart;
 import retrofit.http.Streaming;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.ilya.sergeev.potlach.client.Gift;
 import com.ilya.sergeev.potlach.client.GiftInfo;
@@ -61,7 +62,7 @@ public class GiftController
 	Collection<GiftInfo> getMyGifts(Principal principal)
 	{
 		String userName = principal.getName();
-		return reverse(mGiftRepository.findByUserName(userName), userName);
+		return reverse(mGiftRepository.findByOwner(userName), userName);
 	}
 	
 	@PreAuthorize("hasRole('USER')")
@@ -69,7 +70,7 @@ public class GiftController
 	public @ResponseBody
 	Collection<GiftInfo> getGiftsByUserName(@RequestParam(GiftSvcApi.USER_PARAM) String userName, Principal principal)
 	{
-		return reverse(mGiftRepository.findByUserName(userName), principal.getName());
+		return reverse(mGiftRepository.findByOwner(userName), principal.getName());
 	}
 	
 	@PreAuthorize("hasRole('USER')")
@@ -97,7 +98,7 @@ public class GiftController
 		{
 			throw new IllegalArgumentException();
 		}
-		gift.setUserName(principal.getName());
+		gift.setOwner(principal.getName());
 		gift = mGiftRepository.save(gift);
 		if (gift.getId() > 0)
 		{
@@ -123,15 +124,19 @@ public class GiftController
 	@RequestMapping(value = GiftSvcApi.TOUCH_GIFT_PATH, method = RequestMethod.POST)
 	public GiftInfo touchGift(@PathVariable(GiftSvcApi.ID_PARAM) long giftId, Principal principal)
 	{
+		String userName = principal.getName();
 		Gift gift = mGiftRepository.findOne(giftId);
-		gift.setRating(gift.getRating() + 1);
-		mGiftRepository.save(gift);
+		if (!Objects.equal(gift.getOwner(), userName))
+		{
+			gift.setRating(gift.getRating() + 1);
+			mGiftRepository.save(gift);
+			
+			UserInfo user = mUserRepository.findByName(gift.getOwner());
+			user.setRating(user.getRating() + 1);
+			mUserRepository.save(user);
+		}
 		
-		UserInfo user = mUserRepository.findByName(gift.getUserName());
-		user.setRating(user.getRating() + 1);
-		mUserRepository.save(user);
-		
-		return new GiftInfo(gift, mVoteRepository.findByUserNameAndGiftId(principal.getName(), giftId));
+		return new GiftInfo(gift, mVoteRepository.findByUserNameAndGiftId(userName, giftId));
 	}
 	
 	@Multipart

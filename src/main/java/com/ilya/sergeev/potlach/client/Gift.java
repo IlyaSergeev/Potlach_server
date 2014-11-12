@@ -16,7 +16,7 @@ public class Gift
 	private long id;
 	
 	@NotNull
-	private String userName;
+	private String owner;
 	
 	@NotNull
 	private String title;
@@ -71,16 +71,17 @@ public class Gift
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(getUserName(), getTitle(), getMessage());
+		return Objects.hashCode(getOwner(), getTitle(), getMessage(), getRating());
 	}
 	
 	@Override
 	public boolean equals(Object obj)
 	{
 		return (obj instanceof Gift)
-				&& Objects.equal(getUserName(), ((Gift) obj).getUserName())
+				&& Objects.equal(getOwner(), ((Gift) obj).getOwner())
 				&& Objects.equal(getTitle(), ((Gift) obj).getTitle())
-				&& Objects.equal(getMessage(), ((Gift) obj).getMessage());
+				&& Objects.equal(getMessage(), ((Gift) obj).getMessage())
+				&& getRating() == ((Gift) obj).getRating();
 	}
 	
 	public long getDate()
@@ -93,14 +94,14 @@ public class Gift
 		this.date = date;
 	}
 	
-	public String getUserName()
+	public String getOwner()
 	{
-		return userName;
+		return owner;
 	}
 	
-	public void setUserName(String userName)
+	public void setOwner(String owner)
 	{
-		this.userName = userName;
+		this.owner = owner;
 	}
 
 	public String getContentType()

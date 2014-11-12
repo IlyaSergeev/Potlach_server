@@ -16,6 +16,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.util.TextUtils;
 import org.junit.Test;
 
+import retrofit.RestAdapter;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
@@ -27,6 +28,8 @@ import com.ilya.sergeev.potlach.client.GiftSvcApi;
 import com.ilya.sergeev.potlach.client.ImageStatus;
 import com.ilya.sergeev.potlach.client.ImageStatus.ImageState;
 import com.ilya.sergeev.potlach.client.UserInfo;
+import com.ilya.sergeev.potlach.client.Vote;
+import com.ilya.sergeev.potlach.client.VoteSvcApi;
 
 public class GiftTests
 {
@@ -46,6 +49,33 @@ public class GiftTests
 		
 		assertEquals(gift, newGiftInfo.getGift());
 		assertNull(newGiftInfo.getVote());
+	}
+	
+	@Test
+	public void testCreateGiftWithVote()
+	{
+		UserInfo user = TestsData.createNewUser();
+		RestAdapter adapter = TestsData.getRestAdapter(user);
+		GiftSvcApi giftApi = adapter.create(GiftSvcApi.class);
+		
+		Gift origin = TestsData.createNewGift();
+		Gift gift = giftApi.createGift(origin);
+		
+		VoteSvcApi voteApi = adapter.create(VoteSvcApi.class);
+		Vote vote = voteApi.sendVote(gift.getId(), 1);
+		
+		GiftInfo newGiftInfo = giftApi.getGift(gift.getId());
+		
+		assertEquals(gift, newGiftInfo.getGift());
+		assertEquals(vote, newGiftInfo.getVote());
+		
+		
+		vote = voteApi.sendVote(gift.getId(), -1);
+		
+		newGiftInfo = giftApi.getGift(gift.getId());
+		
+		assertEquals(gift, newGiftInfo.getGift());
+		assertEquals(vote, newGiftInfo.getVote());
 	}
 	
 	@Test
@@ -217,5 +247,59 @@ public class GiftTests
 		{
 			return TestsData.random.nextInt() + " " + keyWord + TestsData.random.nextInt();
 		}
+	}
+	
+	public void testCreateTouch()
+	{
+		UserInfo user = TestsData.createNewUser();
+		GiftSvcApi giftApi = TestsData.getRestAdapter(user).create(GiftSvcApi.class);
+		Gift gift = TestsData.createNewGift();
+		gift = giftApi.createGift(gift);
+		
+		assertEquals(0, gift.getRating());
+		
+		UserInfo anotherUser = TestsData.createNewUser();
+		GiftSvcApi anotherGiftApi = TestsData.getRestAdapter(anotherUser).create(GiftSvcApi.class);
+		
+		GiftInfo serverGiftInfo = anotherGiftApi.touchGift(gift.getId());
+		Gift serverGift = serverGiftInfo.getGift();
+		
+		assertEquals(1, serverGift.getRating());
+		assertEquals(gift.getId(), serverGift.getId());
+		assertEquals(gift.getTitle(), serverGift.getTitle());
+		assertEquals(gift.getMessage(), serverGift.getMessage());
+	}
+	
+	public void testCreateSomeTouchs()
+	{
+		UserInfo user = TestsData.createNewUser();
+		GiftSvcApi giftApi = TestsData.getRestAdapter(user).create(GiftSvcApi.class);
+		Gift gift = TestsData.createNewGift();
+		gift = giftApi.createGift(gift);
+		
+		assertEquals(0, gift.getRating());
+		
+		UserInfo anotherUser = TestsData.createNewUser();
+		GiftSvcApi anotherGiftApi = TestsData.getRestAdapter(anotherUser).create(GiftSvcApi.class);
+		
+		int rating = TestsData.random.nextInt(30) + 1;
+		for (int i = 0; i < rating; i++)
+		{
+			GiftInfo serverGiftInfo = anotherGiftApi.touchGift(gift.getId());
+			Gift serverGift = serverGiftInfo.getGift();
+			
+			assertEquals(i + 1, serverGift.getRating());
+			assertEquals(gift.getId(), serverGift.getId());
+			assertEquals(gift.getTitle(), serverGift.getTitle());
+			assertEquals(gift.getMessage(), serverGift.getMessage());
+		}
+		
+		GiftInfo serverGiftInfo = anotherGiftApi.getGift(gift.getId());
+		Gift serverGift = serverGiftInfo.getGift();
+		
+		assertEquals(rating, serverGift.getRating());
+		assertEquals(gift.getId(), serverGift.getId());
+		assertEquals(gift.getTitle(), serverGift.getTitle());
+		assertEquals(gift.getMessage(), serverGift.getMessage());
 	}
 }
