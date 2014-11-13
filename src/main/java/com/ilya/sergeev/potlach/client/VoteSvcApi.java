@@ -13,7 +13,7 @@ public interface VoteSvcApi
 	public static final String SINGLE_VOTE_PATH = VOTE_PATH + "/{id}"; 
 	
 	public static final String ID_PARAM = "id";
-	public static final String GIFT_ID_PARAM = "id";
+	public static final String GIFT_ID_PARAM = "gift";
 	public static final String VOTE_PARAM = "vote";
 	
 	@GET(VOTE_PATH)

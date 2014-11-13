@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.google.common.base.Objects;
+import com.sun.istack.internal.NotNull;
 
 @Entity
 public class UserInfo
@@ -17,6 +18,7 @@ public class UserInfo
 	
 	@Column(unique=true, nullable=false)
 	private String name;
+	@NotNull
 	private String password;
 	
 	private int rating = 0;
