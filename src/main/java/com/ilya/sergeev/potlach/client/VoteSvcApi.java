@@ -22,6 +22,6 @@ public interface VoteSvcApi
 	@GET(SINGLE_VOTE_PATH)
 	public Vote getVote(@Path(ID_PARAM) long ig);
 	
-	@POST(SINGLE_VOTE_PATH)
-	public Vote sendVote(@Path(ID_PARAM)long giftId, @Query(VOTE_PARAM) int voteValue);
+	@POST(VOTE_PATH)
+	public Vote sendVote(@Query(GIFT_ID_PARAM)long giftId, @Query(VOTE_PARAM) int voteValue);
 }

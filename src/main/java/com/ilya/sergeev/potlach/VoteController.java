@@ -38,9 +38,9 @@ public class VoteController
 	}
 	
 	@PreAuthorize("hasRole('USER')")
-	@RequestMapping(value = VoteSvcApi.SINGLE_VOTE_PATH, method = RequestMethod.POST)
+	@RequestMapping(value = VoteSvcApi.VOTE_PATH, method = RequestMethod.POST)
 	public @ResponseBody
-	Vote sendVote(@PathVariable(VoteSvcApi.ID_PARAM) long giftId, @RequestParam(VoteSvcApi.VOTE_PARAM) int voteValue, Principal principal)
+	Vote sendVote(@RequestParam(VoteSvcApi.GIFT_ID_PARAM) long giftId, @RequestParam(VoteSvcApi.VOTE_PARAM) int voteValue, Principal principal)
 	{
 		String userName = principal.getName();
 		Vote vote = mVoteRepository.findByUserNameAndGiftId(userName, giftId);
