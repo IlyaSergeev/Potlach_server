@@ -25,7 +25,6 @@ public class UserController
 	@Autowired
 	UserInfoRepository mUserRepository;
 	
-	// GET /user_info/name
 	@RequestMapping(value = UserInfoSvcApi.HELLO_PATH, method = RequestMethod.GET)
 	public @ResponseBody
 	SimpleMessage getHello(Principal principal)
@@ -36,9 +35,10 @@ public class UserController
 		return result;
 	}
 	
-	@RequestMapping(value = UserInfoSvcApi.DELETE_USER_PATH, method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(value = UserInfoSvcApi.USER_INFO_PATH, method = RequestMethod.GET)
 	public @ResponseBody
-	UserInfo deleteUser(@RequestParam(UserInfoSvcApi.USER_NAME_PARAM) String userName)
+	UserInfo getUser(@RequestParam(UserInfoSvcApi.USER_NAME_PARAM) String userName)
 	{
 		return mUserRepository.findByName(userName);
 	}
