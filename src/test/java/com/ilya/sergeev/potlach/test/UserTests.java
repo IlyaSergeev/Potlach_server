@@ -41,8 +41,8 @@ public class UserTests
 	{
 		try
 		{
-			userInfoSvcAdminGood.getUserInfo("user" + TestsData.random.nextInt());
-			Assert.fail("User not real");
+			UserInfo userInfo = userInfoSvcAdminGood.getUserInfo("user" + TestsData.random.nextInt());
+			assertNull(userInfo);
 		}
 		catch (Exception ex)
 		{
@@ -62,7 +62,7 @@ public class UserTests
 		try
 		{
 			userInfo = userInfoSvcAdminGood.getUserInfo(userName);
-			Assert.fail("User must be deleted");
+			assertNull(userInfo);
 		}
 		catch (Exception ex)
 		{
