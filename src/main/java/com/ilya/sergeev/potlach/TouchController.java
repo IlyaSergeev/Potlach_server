@@ -44,6 +44,9 @@ public class TouchController
 		}
 		
 		Gift gift = mGiftRepository.findOne(giftId);
+		gift.setRating(gift.getRating()+1);
+		mGiftRepository.save(gift);
+		
 		UserInfo user = mUserRepository.findByName(gift.getOwner());
 		user.setRating(user.getRating() + 1);
 		mUserRepository.save(user);
