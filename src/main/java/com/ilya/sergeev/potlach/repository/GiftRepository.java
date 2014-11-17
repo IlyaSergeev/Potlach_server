@@ -10,6 +10,7 @@ import com.ilya.sergeev.potlach.client.Gift;
 @Repository
 public interface GiftRepository extends CrudRepository<Gift, Long>
 {
+	//search by key word in title
 	public Collection<Gift> findByTitleContainingIgnoreCase(String title);
 	public Collection<Gift> findByOwner(String owner);
 }
